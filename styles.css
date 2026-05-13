@@ -189,6 +189,10 @@ textarea {
   background: #f7fbff;
 }
 
+.resource {
+  background: #fffaf0;
+}
+
 ul,
 ol {
   margin: 0;

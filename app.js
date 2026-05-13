@@ -3,6 +3,7 @@ const risk = document.querySelector("#risk");
 const timestamp = document.querySelector("#timestamp");
 const signals = document.querySelector("#signals");
 const plan = document.querySelector("#plan");
+const resources = document.querySelector("#resources");
 const questions = document.querySelector("#questions");
 const language = document.querySelector("#language");
 const handoff = document.querySelector("#handoff");
@@ -17,6 +18,8 @@ const samples = {
     "After a storm, a neighbor is standing near floodwater and a fallen power line. Phone signal is weak and people are gathering nearby.",
   language:
     "A Spanish-speaking family arrived at an evacuation center and cannot understand the registration instructions. One child has asthma medication, and the parent needs help explaining the care need safely.",
+  resources:
+    "A volunteer is triaging evacuees after a flood: one family has insulin that must stay cold, another has a dog, and an older adult needs accessible transport. Someone says a shelter can take everyone, but nobody has checked official sources.",
   heat:
     "A student volunteer is preparing a community heatwave checklist for older residents who live alone. They need a simple plan for water, cooling, and daily check-ins.",
 };
@@ -97,11 +100,36 @@ function buildLanguageSupport(text) {
   ];
 }
 
-function buildResponderHandoff(result, actions, qs, languageSupport) {
+function buildOfficialResourceChecks(text, result) {
+  const lower = text.toLowerCase();
+  const checks = ["Local emergency management: verify current evacuation orders, road closures, and official shelter routing before sending people anywhere."];
+  if (result.level === "high" || result.signals.some((signal) => ["oxygen", "floodwater", "electrical"].some((term) => signal.includes(term)))) {
+    checks.push("Emergency services or utility emergency line: use for immediate danger, downed power lines, oxygen/powered-device failure, or life-safety escalation.");
+  }
+  if (includesAny(lower, ["shelter", "evacuat"])) {
+    checks.push("Shelter operations desk: confirm accessibility, pet policy, intake requirements, and live capacity; do not rely on social media capacity claims.");
+  }
+  if (includesAny(lower, ["medication", "medicine", "dialysis", "insulin", "prenatal", "asthma", "oxygen", "care"])) {
+    checks.push("Medical triage, clinic, pharmacy, or care coordinator: verify medication continuity, device power needs, dialysis/prenatal timing, and safe storage.");
+  }
+  if (includesAny(lower, ["transport", "road", "ride", "bus"])) {
+    checks.push("Official transport desk or emergency management logistics: arrange accessible transport and avoid flooded roads.");
+  }
+  if (includesAny(lower, ["pet", "dog", "cat"])) {
+    checks.push("Animal services or shelter pet desk: verify pet intake rules, carrier needs, and documentation.");
+  }
+  if (detectPreferredLanguage(text)) {
+    checks.push("Language access line or qualified interpreter pool: confirm interpretation support before collecting medical or legal details.");
+  }
+  return checks;
+}
+
+function buildResponderHandoff(result, actions, qs, languageSupport, officialChecks) {
   return [
     `Risk: ${result.level}.`,
     `Signals: ${result.signals.join("; ")}.`,
     `Immediate routing: ${actions.slice(0, 2).join(" ")}`,
+    `Official checks: ${officialChecks.slice(0, 2).join(" ")}`,
     `Open information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access note: ${languageSupport[0]}`,
   ];
@@ -129,11 +157,13 @@ function generateResponse(text) {
     qs.splice(1, 0, "What is the preferred language, and is a qualified interpreter available now?");
   }
   const languageSupport = buildLanguageSupport(text);
-  const responderHandoff = buildResponderHandoff(result, actions, qs, languageSupport);
+  const officialChecks = buildOfficialResourceChecks(text, result);
+  const responderHandoff = buildResponderHandoff(result, actions, qs, languageSupport, officialChecks);
   return {
     risk_level: result.level,
     case_signals: result.signals,
     action_plan: actions,
+    official_resource_checks: officialChecks,
     clarifying_questions: qs,
     language_support: languageSupport,
     responder_handoff: responderHandoff,
@@ -155,6 +185,7 @@ function toText(data) {
     `Risk level: ${data.risk_level}`,
     `Case signals:\n${data.case_signals.map((item) => `- ${item}`).join("\n")}`,
     `Action plan:\n${data.action_plan.map((item, idx) => `${idx + 1}. ${item}`).join("\n")}`,
+    `Official resource checks:\n${data.official_resource_checks.map((item) => `- ${item}`).join("\n")}`,
     `Clarifying questions:\n${data.clarifying_questions.map((item) => `- ${item}`).join("\n")}`,
     `Language support:\n${data.language_support.map((item) => `- ${item}`).join("\n")}`,
     `Responder handoff:\n${data.responder_handoff.map((item) => `- ${item}`).join("\n")}`,
@@ -169,6 +200,7 @@ function runTriage() {
   risk.dataset.level = data.risk_level;
   renderList(signals, data.case_signals);
   renderList(plan, data.action_plan);
+  renderList(resources, data.official_resource_checks);
   renderList(questions, data.clarifying_questions);
   renderList(language, data.language_support);
   renderList(handoff, data.responder_handoff);
