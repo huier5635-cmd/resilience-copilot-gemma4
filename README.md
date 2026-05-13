@@ -6,7 +6,7 @@ Kaggle project workspace for a prize-oriented Gemma 4 Good submission. This is a
 
 - Competition: https://www.kaggle.com/competitions/gemma-4-good-hackathon
 - Data: `data/raw/NOTE.md` says no dataset is provided.
-- Submission: one Kaggle Writeup per team. Do not submit until the local checklist passes.
+- Submission: one Kaggle Writeup per team.
 - Required assets: Kaggle Writeup, public code repository, public live demo, public video, media/gallery cover.
 - Evaluation focus: impact and vision, video pitch/storytelling, technical depth/execution.
 - Deadline recorded from competition page: 2026-05-18 23:59 UTC, which is 2026-05-19 07:59 in China.
@@ -17,7 +17,18 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: local baseline passes demo and holdout gates, and Kaggle Gemma 4 runtime evidence has been captured. The project is still not submission-ready because public video, public code repository, and public live demo URLs are missing.
+Current status: submitted to Kaggle on 2026-05-13. The local baseline passes demo and holdout gates, Kaggle Gemma 4 runtime evidence has been captured, the public GitHub repo is live, the durable GitHub Pages static demo is available, and the YouTube video is uploaded as unlisted.
+
+Submitted writeup:
+
+`https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423`
+
+## Public Links
+
+- Public demo: https://huier5635-cmd.github.io/resilience-copilot-gemma4/
+- Public code: https://github.com/huier5635-cmd/resilience-copilot-gemma4
+- YouTube video: https://youtu.be/CmqCV8Ic9cY
+- Kaggle Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
 
 ## Directory Map
 
@@ -43,7 +54,13 @@ Run only the demo-case evaluation:
 python scripts\evaluate_demo_cases.py --cases data\cases\demo_cases.jsonl --output outputs\local_validation\demo_eval.json
 ```
 
-The current target is not leaderboard-style score maximization; it is a reliable evidence gate for a hackathon submission.
+Current final gate:
+
+- `ready_to_submit=true`
+- demo cases: 2/2
+- holdout cases: 2/2
+- Kaggle checklist: 7/7
+- final Kaggle submission: created
 
 ## Local Demo
 
@@ -56,23 +73,26 @@ python app\app.py
 
 Open `http://127.0.0.1:7861`.
 
-Temporary public demo for testing:
+Temporary public demo backup:
 
 `https://applied-rico-impose-stated.trycloudflare.com`
 
-This is a Cloudflare quick tunnel and should be replaced before final judging.
+Durable public static demo:
 
-Video draft:
+`https://huier5635-cmd.github.io/resilience-copilot-gemma4/`
 
-`outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
+The Cloudflare link is a quick tunnel backup. Use the GitHub Pages link as the public demo in the Kaggle writeup.
 
-Static deployment package:
+## Assets
 
-`outputs/submission_assets/public_demo_static.zip`
+- Video draft: `outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
+- Static deployment package: `outputs/submission_assets/public_demo_static.zip`
+- Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
+- Evidence report: `outputs/local_validation/evidence_report.md`
 
 ## Submission Policy
 
-- No direct Kaggle submission until `scripts\run_local_validation.py` reports the required assets and evidence are ready.
+- No direct Kaggle submission until `scripts\run_local_validation.py` reports the required assets and evidence are ready. The 2026-05-13 submission followed this rule.
 - Public reproduction is capped at two online attempts per day.
 - At least one original or micro-tuning branch must remain prepared for every submission round.
 - Every experiment must record hypothesis, command, local result, online result if any, rank if applicable, and next action.
