@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resilience Copilot</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="case-pane">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Gemma 4 Good Hackathon</p>
+            <h1>Resilience Copilot</h1>
+          </div>
+          <div class="status">static safety demo</div>
+        </header>
+
+        <div class="sample-row">
+          <button class="sample is-active" data-scenario="flood">Flood family</button>
+          <button class="sample" data-scenario="power">Power line</button>
+          <button class="sample" data-scenario="heat">Heatwave</button>
+        </div>
+
+        <label class="field-label" for="scenario">Case note</label>
+        <textarea id="scenario">A family of five was evacuated after a flood. Two children are cold, grandmother forgot blood pressure medicine, and they need a shelter that accepts pets.</textarea>
+
+        <div class="actions">
+          <button id="run">Run triage</button>
+          <button id="copy">Copy handoff</button>
+        </div>
+      </section>
+
+      <section class="result-pane">
+        <div class="risk-strip">
+          <span class="risk" id="risk">Risk level</span>
+          <span class="timestamp" id="timestamp">waiting</span>
+        </div>
+        <div class="grid">
+          <article class="block">
+            <h2>Case Signals</h2>
+            <ul id="signals"></ul>
+          </article>
+          <article class="block">
+            <h2>Action Plan</h2>
+            <ol id="plan"></ol>
+          </article>
+          <article class="block">
+            <h2>Clarifying Questions</h2>
+            <ul id="questions"></ul>
+          </article>
+          <article class="block boundary">
+            <h2>Safety Boundary</h2>
+            <p id="boundary"></p>
+          </article>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
