@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13. The local baseline passes demo, holdout, and stress gates; Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
+Current status: submitted to Kaggle on 2026-05-13. The local baseline passes demo, holdout, and stress gates; the current original enhancement adds language-access support plus a responder handoff note. Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
 
 Submitted writeup:
 
@@ -57,7 +57,7 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
-- stress cases: 4/4
+- stress cases: 5/5
 - Kaggle checklist: 7/7
 - final Kaggle submission: created
 

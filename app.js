@@ -4,6 +4,8 @@ const timestamp = document.querySelector("#timestamp");
 const signals = document.querySelector("#signals");
 const plan = document.querySelector("#plan");
 const questions = document.querySelector("#questions");
+const language = document.querySelector("#language");
+const handoff = document.querySelector("#handoff");
 const boundary = document.querySelector("#boundary");
 const copy = document.querySelector("#copy");
 let lastText = "";
@@ -13,6 +15,8 @@ const samples = {
     "A family of five was evacuated after a flood. Two children are cold, grandmother forgot blood pressure medicine, and they need a shelter that accepts pets.",
   power:
     "After a storm, a neighbor is standing near floodwater and a fallen power line. Phone signal is weak and people are gathering nearby.",
+  language:
+    "A Spanish-speaking family arrived at an evacuation center and cannot understand the registration instructions. One child has asthma medication, and the parent needs help explaining the care need safely.",
   heat:
     "A student volunteer is preparing a community heatwave checklist for older residents who live alone. They need a simple plan for water, cooling, and daily check-ins.",
 };
@@ -51,12 +55,56 @@ function detectRisk(text) {
   if (includesAny(lower, ["power line", "downed line", "electric"]) && includesAny(lower, ["flood", "water"])) {
     detected.push("electrical hazard near floodwater");
   }
+  if (includesAny(lower, ["pregnant", "prenatal", "pregnancy", "insulin"])) {
+    detected.push("pregnancy or insulin continuity risk");
+  }
+  if (includesAny(lower, ["oxygen concentrator", "oxygen", "backup battery", "medical device"]) && includesAny(lower, ["power", "battery", "outage", "empty"])) {
+    detected.push("oxygen or powered medical device risk");
+  }
   if (detected.length) return { level: "high", signals: detected };
   if (includesAny(lower, ["evacuated", "evacuation", "shelter"])) detected.push("evacuation or shelter need");
   if (includesAny(lower, ["pet", "dog", "cat"])) detected.push("pet-compatible shelter needed");
   if (includesAny(lower, ["transport", "road", "ride", "bus"])) detected.push("transport barrier");
+  if (includesAny(lower, ["dialysis", "appointment", "care"])) detected.push("care continuity concern");
+  if (includesAny(lower, ["spanish-speaking", "interpreter", "translation", "language barrier", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) detected.push("language access barrier");
+  if ((includesAny(lower, ["rumor", "social media"]) && includesAny(lower, ["shelter", "beds", "capacity"]))) detected.push("unverified shelter capacity rumor");
   if (detected.length) return { level: "medium", signals: detected };
   return { level: "low", signals: ["planning or preparedness request"] };
+}
+
+function detectPreferredLanguage(text) {
+  const lower = text.toLowerCase();
+  if (includesAny(lower, ["spanish-speaking", "spanish"])) return "Spanish";
+  if (includesAny(lower, ["chinese", "mandarin", "cantonese"])) return "Chinese";
+  if (lower.includes("vietnamese")) return "Vietnamese";
+  if (lower.includes("arabic")) return "Arabic";
+  if (includesAny(lower, ["limited english", "does not speak english", "cannot understand", "language barrier", "interpreter", "translation"])) {
+    return "Unknown non-English language";
+  }
+  return null;
+}
+
+function buildLanguageSupport(text) {
+  const preferredLanguage = detectPreferredLanguage(text);
+  if (!preferredLanguage) {
+    return ["Ask whether the household prefers another language, plain-language instructions, or an accessible format."];
+  }
+  return [
+    `Preferred language: ${preferredLanguage}.`,
+    "Use a qualified interpreter or language-access volunteer before collecting sensitive medical, registration, or shelter details.",
+    "Read back the action plan in the preferred language and confirm understanding before routing the case.",
+    "Do not use children as interpreters for medical or safety-critical details.",
+  ];
+}
+
+function buildResponderHandoff(result, actions, qs, languageSupport) {
+  return [
+    `Risk: ${result.level}.`,
+    `Signals: ${result.signals.join("; ")}.`,
+    `Immediate routing: ${actions.slice(0, 2).join(" ")}`,
+    `Open information: ${qs.slice(0, 2).join(" ")}`,
+    `Language/access note: ${languageSupport[0]}`,
+  ];
 }
 
 function generateResponse(text) {
@@ -68,16 +116,27 @@ function generateResponse(text) {
   if (includesAny(lower, ["transport", "road", "ride"])) actions.push("Coordinate transport only through official emergency management, clinic, or responder channels; do not drive through floodwater.");
   if (includesAny(lower, ["check-in", "check-ins", "live alone"])) actions.push("Set daily check-ins with a named neighbor, volunteer, or family contact, and define when to escalate if there is no response.");
   if (lower.includes("power line")) actions.unshift("Move people away from floodwater and the downed line; contact emergency services or the utility through official channels.");
+  if (includesAny(lower, ["pregnant", "prenatal", "insulin"])) actions.push("Route pregnancy, insulin, or prenatal-care continuity through official medical triage; record storage needs, timing, and callback details.");
+  if (includesAny(lower, ["oxygen", "medical device", "backup battery"])) actions.unshift("Treat oxygen or powered medical device interruption as urgent; contact emergency services, utility medical priority channels, or clinical support.");
+  if (includesAny(lower, ["spanish", "interpreter", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) actions.push("Request a qualified interpreter or language-access volunteer before collecting sensitive medication or registration details.");
+  if (includesAny(lower, ["rumor", "social media", "capacity", "beds"])) actions.push("Verify shelter capacity only through official emergency management or shelter operations before routing evacuees.");
   const qs = [
     "What is the current location and safest callback number?",
     "Are there children, older adults, disabilities, pets, or urgent medical needs?",
     "Is there immediate danger such as floodwater, fire, electrical hazards, or severe symptoms?",
   ];
+  if (detectPreferredLanguage(text)) {
+    qs.splice(1, 0, "What is the preferred language, and is a qualified interpreter available now?");
+  }
+  const languageSupport = buildLanguageSupport(text);
+  const responderHandoff = buildResponderHandoff(result, actions, qs, languageSupport);
   return {
     risk_level: result.level,
     case_signals: result.signals,
     action_plan: actions,
     clarifying_questions: qs,
+    language_support: languageSupport,
+    responder_handoff: responderHandoff,
     safety_boundary: "Do not diagnose or invent real-time shelter capacity; use official local emergency channels for availability and urgent escalation.",
   };
 }
@@ -97,6 +156,8 @@ function toText(data) {
     `Case signals:\n${data.case_signals.map((item) => `- ${item}`).join("\n")}`,
     `Action plan:\n${data.action_plan.map((item, idx) => `${idx + 1}. ${item}`).join("\n")}`,
     `Clarifying questions:\n${data.clarifying_questions.map((item) => `- ${item}`).join("\n")}`,
+    `Language support:\n${data.language_support.map((item) => `- ${item}`).join("\n")}`,
+    `Responder handoff:\n${data.responder_handoff.map((item) => `- ${item}`).join("\n")}`,
     `Safety boundary: ${data.safety_boundary}`,
   ].join("\n\n");
 }
@@ -109,6 +170,8 @@ function runTriage() {
   renderList(signals, data.case_signals);
   renderList(plan, data.action_plan);
   renderList(questions, data.clarifying_questions);
+  renderList(language, data.language_support);
+  renderList(handoff, data.responder_handoff);
   boundary.textContent = data.safety_boundary;
   timestamp.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

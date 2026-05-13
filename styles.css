@@ -185,6 +185,10 @@ textarea {
   background: var(--accent-soft);
 }
 
+.handoff {
+  background: #f7fbff;
+}
+
 ul,
 ol {
   margin: 0;
