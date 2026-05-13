@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13. The local baseline passes demo and holdout gates, Kaggle Gemma 4 runtime evidence has been captured, the public GitHub repo is live, the durable GitHub Pages static demo is available, and the YouTube video is uploaded as unlisted.
+Current status: submitted to Kaggle on 2026-05-13. The local baseline passes demo, holdout, and stress gates; Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
 
 Submitted writeup:
 
@@ -32,9 +32,7 @@ Submitted writeup:
 
 ## Directory Map
 
-- `docs/实验记录.md`: every experiment and submission decision.
-- `docs/学习台账.md`: beginner-friendly concepts and next learning steps.
-- `docs/本地验证冲分手册.md`: how to run local checks before any public submission.
+- `docs/`: Chinese experiment log, learning ledger, local validation manual, public notebook review, writeup draft, deployment notes, and pitch-deck evidence notes.
 - `notebooks/public_reproduction/`: downloaded public Kaggle notebooks and review notes.
 - `notebooks/experiments/`: our own Kaggle/local evidence notebooks.
 - `scripts/`: local validation, baseline, evidence, and asset checks.
@@ -59,6 +57,7 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
+- stress cases: 4/4
 - Kaggle checklist: 7/7
 - final Kaggle submission: created
 
@@ -86,9 +85,21 @@ The Cloudflare link is a quick tunnel backup. Use the GitHub Pages link as the p
 ## Assets
 
 - Video draft: `outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
+- Pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v2.pptx`
 - Static deployment package: `outputs/submission_assets/public_demo_static.zip`
 - Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
 - Evidence report: `outputs/local_validation/evidence_report.md`
+
+Root-level public repo assets:
+
+- `resilience_copilot_pitch_v2.pptx`
+- `resilience_copilot_submission_bundle.zip`
+
+Refresh the submission bundle after changing project assets:
+
+```powershell
+python scripts\build_submission_bundle.py
+```
 
 ## Submission Policy
 
