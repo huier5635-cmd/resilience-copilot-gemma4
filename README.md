@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13 and refreshed on 2026-05-14. The latest submitted version, EXP-021, adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, and an updated `resilience_copilot_submission_bundle_EXP021.zip` attachment. It passes the expanded 10-case stress gate and the submitted Kaggle page now documents the 12-section response and 10/10 stress validation. Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
+Current status: submitted to Kaggle on 2026-05-13 and refreshed on 2026-05-14. The latest submitted Kaggle version, EXP-021, adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, and an updated `resilience_copilot_submission_bundle_EXP021.zip` attachment. It passes the expanded 10-case stress gate and the submitted Kaggle page documents the 12-section response and 10/10 stress validation. On 2026-05-15, EXP-022 refreshed the public GitHub Pages demo at the same URL so the live judge-facing page now matches the EXP-021 evidence package.
 
 Submitted writeup:
 
@@ -72,6 +72,7 @@ Current final gate:
 - stress cases: 10/10 locally and in the submitted Kaggle writeup
 - writeup readiness: checked locally against word count, links, and evidence terms
 - judging packet: checked locally against rubric map, links, assets, and validation results
+- public evidence surface: GitHub Pages verified on 2026-05-15 with `Responder packet`, `Household message`, and `Audit trace`
 - Kaggle checklist: 7/7
 - final Kaggle submission: created
 
@@ -110,6 +111,8 @@ Refresh the submission bundle after changing project assets:
 ```powershell
 python scripts\build_submission_bundle.py
 ```
+
+Latest public repo refresh: `1794923 Refresh Resilience Copilot EXP-021 demo` on 2026-05-15. This did not consume a Kaggle final submission slot because the Kaggle writeup URL and public demo URL stayed unchanged.
 
 ## Submission Policy
 
