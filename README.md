@@ -112,7 +112,7 @@ Refresh the submission bundle after changing project assets:
 python scripts\build_submission_bundle.py
 ```
 
-Latest public repo refresh: `1794923 Refresh Resilience Copilot EXP-021 demo` on 2026-05-15. This did not consume a Kaggle final submission slot because the Kaggle writeup URL and public demo URL stayed unchanged.
+EXP-022 public repo refresh: GitHub Pages and the public submission bundle were refreshed on 2026-05-15. This did not consume a Kaggle final submission slot because the Kaggle writeup URL and public demo URL stayed unchanged.
 
 ## Submission Policy
 
