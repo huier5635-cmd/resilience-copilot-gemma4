@@ -45,10 +45,11 @@ Gemma-related project files, browser profile data, downloads, evidence bundles, 
 - Project workspace: `D:\Kaggle\Gemma4Good\New project 5`
 - Gemma Chrome profile: `D:\Kaggle\Gemma4Good\ChromeDebugProfile_Gemma`
 - Gemma downloads: `D:\Kaggle\Gemma4Good\Downloads`
+- Gemma temp/check files: `D:\Kaggle\Gemma4Good\Temp`
 - Ollama data: `D:\Kaggle\Gemma4Good\Ollama\.ollama`
 - User environment variable: `OLLAMA_MODELS=D:\Kaggle\Gemma4Good\Ollama\.ollama\models`
 
-Do not intentionally download new Gemma/Kaggle assets to the C drive. The legacy paths `C:\ChromeDebugProfile_Gemma` and `C:\Users\Liaoke\.ollama` are junctions into D, so old commands can keep working without storing large data on C.
+Do not intentionally download new Gemma/Kaggle assets to the C drive. For temporary verification downloads, use `D:\Kaggle\Gemma4Good\Temp` instead of `%TEMP%`. The legacy paths `C:\ChromeDebugProfile_Gemma` and `C:\Users\Liaoke\.ollama` are junctions into D, so old commands can keep working without storing large data on C.
 
 ## Local Validation
 
