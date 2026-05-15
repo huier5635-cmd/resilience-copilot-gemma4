@@ -11,15 +11,18 @@ const handoff = document.querySelector("#handoff");
 const packet = document.querySelector("#packet");
 const household = document.querySelector("#household");
 const audit = document.querySelector("#audit");
+const caseExport = document.querySelector("#case-export");
 const boundary = document.querySelector("#boundary");
 const copy = document.querySelector("#copy");
 const copyPacket = document.querySelector("#copy-packet");
+const copyJson = document.querySelector("#copy-json");
 const briefReview = document.querySelector("#brief-review");
 const briefPlaybooks = document.querySelector("#brief-playbooks");
 const briefRoutes = document.querySelector("#brief-routes");
 const briefEvidence = document.querySelector("#brief-evidence");
 let lastText = "";
 let lastPacketText = "";
+let lastJsonText = "";
 
 const samples = {
   flood:
@@ -268,6 +271,44 @@ function buildAuditTrace(text, result, playbookReferences, officialChecks) {
   ];
 }
 
+function fingerprint(text) {
+  let hash = 2166136261;
+  for (const char of text.toLowerCase().trim().replace(/\s+/g, " ")) {
+    hash ^= char.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `RC-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
+function buildCaseExport(text, result, playbookReferences, officialChecks, questions) {
+  const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
+  const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
+  const reviewLevel = {
+    high: "immediate_escalation",
+    medium: "responder_review",
+    low: "preparedness_check",
+  }[result.level];
+  return {
+    contract_version: "resilience-copilot-exp024",
+    case_fingerprint: fingerprint(text),
+    risk_level: result.level,
+    review_level: reviewLevel,
+    signals: result.signals,
+    playbook_ids: playbookIds,
+    official_routes: routeLabels,
+    required_human_review: true,
+    blocked_claims: ["medical conclusions", "live shelter capacity", "road safety", "transport availability"],
+    language: detectPreferredLanguage(text) || "none",
+    missing_information: questions.slice(0, 3),
+    response_contract: [
+      "official-routes-first",
+      "no-invented-capacity",
+      "qualified-interpreter-when-needed",
+      "human-responder-final-decision",
+    ],
+  };
+}
+
 function generateResponse(text) {
   const lower = text.toLowerCase();
   const result = detectRisk(text);
@@ -297,6 +338,7 @@ function generateResponse(text) {
   const responderPacket = buildResponderPacket(result, playbookReferences, officialChecks, qs, languageSupport);
   const householdMessage = buildHouseholdMessage(text, result, officialChecks, qs, languageSupport);
   const auditTrace = buildAuditTrace(text, result, playbookReferences, officialChecks);
+  const structuredExport = buildCaseExport(text, result, playbookReferences, officialChecks, qs);
   return {
     risk_level: result.level,
     case_signals: result.signals,
@@ -309,6 +351,7 @@ function generateResponse(text) {
     responder_packet: responderPacket,
     household_message: householdMessage,
     audit_trace: auditTrace,
+    case_export: structuredExport,
     safety_boundary: "Do not diagnose or invent real-time shelter capacity; use official local emergency channels for availability and urgent escalation.",
   };
 }
@@ -335,6 +378,7 @@ function toText(data) {
     `Responder packet:\n${data.responder_packet.map((item) => `- ${item}`).join("\n")}`,
     `Household message:\n${data.household_message.map((item) => `- ${item}`).join("\n")}`,
     `Audit trace:\n${data.audit_trace.map((item) => `- ${item}`).join("\n")}`,
+    `Structured case export:\n${JSON.stringify(data.case_export, null, 2)}`,
     `Safety boundary: ${data.safety_boundary}`,
   ].join("\n\n");
 }
@@ -355,6 +399,7 @@ function renderDecisionBrief(data) {
 function runTriage() {
   const data = generateResponse(scenario.value);
   lastText = toText(data);
+  lastJsonText = JSON.stringify(data.case_export, null, 2);
   lastPacketText = [
     `Risk level: ${data.risk_level}`,
     "Responder packet:",
@@ -375,6 +420,7 @@ function runTriage() {
   renderList(packet, data.responder_packet);
   renderList(household, data.household_message);
   renderList(audit, data.audit_trace);
+  caseExport.textContent = lastJsonText;
   boundary.textContent = data.safety_boundary;
   timestamp.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
@@ -395,6 +441,15 @@ copyPacket.addEventListener("click", async () => {
   copyPacket.textContent = "Copied";
   window.setTimeout(() => {
     copyPacket.textContent = "Copy packet";
+  }, 1200);
+});
+
+copyJson.addEventListener("click", async () => {
+  if (!lastJsonText) return;
+  await navigator.clipboard.writeText(lastJsonText);
+  copyJson.textContent = "Copied";
+  window.setTimeout(() => {
+    copyJson.textContent = "Copy JSON";
   }, 1200);
 });
 

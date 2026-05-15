@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13, refreshed on 2026-05-14, and refreshed again on 2026-05-15 for EXP-023. The latest submitted Kaggle version adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, a decision brief, copy-ready packet button, heatwave/cooling-center official routing, and an updated `resilience_copilot_submission_bundle_EXP023.zip` attachment. It passes the expanded 11-case stress gate and the submitted Kaggle page documents the 12-section response and 11/11 stress validation. EXP-022 also refreshed the public GitHub Pages demo at the same URL.
+Current status: submitted to Kaggle on 2026-05-13, refreshed on 2026-05-14, and refreshed again on 2026-05-15 for EXP-023. The latest submitted Kaggle version adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, a decision brief, copy-ready packet button, heatwave/cooling-center official routing, and an updated `resilience_copilot_submission_bundle_EXP023.zip` attachment. It passes the expanded 11-case stress gate and the submitted Kaggle page documents the 12-section response and 11/11 stress validation. EXP-024 is the current local/public-demo candidate: it adds a structured case export JSON with case fingerprint, review level, playbook IDs, official routes, blocked claims, and response contract; local stress validation now passes 12/12. EXP-022 also refreshed the public GitHub Pages demo at the same URL.
 
 Submitted writeup:
 
@@ -70,7 +70,7 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
-- stress cases: 11/11 locally and in the latest submitted EXP-023 Kaggle writeup
+- stress cases: 12/12 locally; the latest submitted EXP-023 Kaggle writeup documents 11/11
 - writeup readiness: checked locally against word count, links, and evidence terms
 - judging packet: checked locally against rubric map, links, assets, and validation results
 - public evidence surface: GitHub Pages verified on 2026-05-15 with `Responder packet`, `Household message`, and `Audit trace`
@@ -116,6 +116,8 @@ python scripts\build_submission_bundle.py
 EXP-022 public repo refresh: GitHub Pages and the public source/demo were refreshed on 2026-05-15. This did not consume a Kaggle final submission slot because the Kaggle writeup URL and public demo URL stayed unchanged.
 
 EXP-023 Kaggle refresh: the demo now shows a compact decision brief, supports `Copy packet`, and includes heatwave/cooling-center routing through public health and official emergency-management channels. Kaggle was refreshed on 2026-05-15 with the EXP-023 writeup and `resilience_copilot_submission_bundle_EXP023.zip`.
+
+EXP-024 local/public demo candidate: the demo now includes `Copy JSON` and a structured case export with `case_fingerprint`, `review_level`, `required_human_review`, `blocked_claims`, and `response_contract`. This has not consumed another Kaggle submission slot yet.
 
 ## Submission Policy
 

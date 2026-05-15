@@ -136,7 +136,8 @@ textarea {
 }
 
 #copy,
-#copy-packet {
+#copy-packet,
+#copy-json {
   color: var(--ink);
   background: #e8eeee;
 }
@@ -255,6 +256,10 @@ textarea {
   background: #f7f8fa;
 }
 
+.export {
+  background: #f8fbff;
+}
+
 ul,
 ol {
   margin: 0;
@@ -262,7 +267,8 @@ ol {
 }
 
 li,
-p {
+p,
+pre {
   color: #1f353a;
   font-size: 15px;
   line-height: 1.55;
@@ -274,6 +280,16 @@ li + li {
 
 p {
   margin: 0;
+}
+
+pre {
+  max-height: 360px;
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 13px;
 }
 
 @media (max-width: 900px) {
