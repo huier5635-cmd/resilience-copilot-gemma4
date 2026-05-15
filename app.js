@@ -13,7 +13,13 @@ const household = document.querySelector("#household");
 const audit = document.querySelector("#audit");
 const boundary = document.querySelector("#boundary");
 const copy = document.querySelector("#copy");
+const copyPacket = document.querySelector("#copy-packet");
+const briefReview = document.querySelector("#brief-review");
+const briefPlaybooks = document.querySelector("#brief-playbooks");
+const briefRoutes = document.querySelector("#brief-routes");
+const briefEvidence = document.querySelector("#brief-evidence");
 let lastText = "";
+let lastPacketText = "";
 
 const samples = {
   flood:
@@ -25,7 +31,7 @@ const samples = {
   resources:
     "A volunteer is triaging evacuees after a flood: one family has insulin that must stay cold, another has a dog, and an older adult needs accessible transport. Someone says a shelter can take everyone, but nobody has checked official sources.",
   heat:
-    "A student volunteer is preparing a community heatwave checklist for older residents who live alone. They need a simple plan for water, cooling, and daily check-ins.",
+    "A senior with diabetes is overheated during an extreme heat outage, has insulin that needs safe storage, speaks limited English, has no car, and needs routing to a cooling center without anyone promising capacity.",
 };
 
 const actionTemplates = {
@@ -84,6 +90,12 @@ const playbookRules = [
     summary: "Use qualified interpreters or language-access volunteers for medical, legal, registration, and shelter details; confirm understanding in the preferred language.",
   },
   {
+    id: "PB-HEAT-COOLING-CENTER",
+    title: "Heat response and cooling-center routing",
+    signals: ["cooling center or heat safety routing", "heat illness with medication or mobility risk"],
+    summary: "Route heat exposure, cooling-center access, welfare checks, medication storage, and transport needs through public health or official emergency-management heat-response channels.",
+  },
+  {
     id: "PB-LOW-RISK-PREPAREDNESS",
     title: "Preparedness without over-escalation",
     signals: ["low", "planning or preparedness request"],
@@ -113,13 +125,17 @@ function detectRisk(text) {
   if (includesAny(lower, ["oxygen concentrator", "oxygen", "backup battery", "medical device"]) && includesAny(lower, ["power", "battery", "outage", "empty"])) {
     detected.push("oxygen or powered medical device risk");
   }
+  if (includesAny(lower, ["heat illness", "overheated", "no cooling"]) && includesAny(lower, ["insulin", "diabetes", "older adult", "elderly", "wheelchair", "mobility"])) {
+    detected.push("heat illness with medication or mobility risk");
+  }
   const hasHighSignal = detected.length > 0;
   if (includesAny(lower, ["evacuated", "evacuation", "shelter"])) detected.push("evacuation or shelter need");
   if (includesAny(lower, ["pet", "dog", "cat"])) detected.push("pet-compatible shelter needed");
-  if (includesAny(lower, ["transport", "road", "ride", "bus"])) detected.push("transport barrier");
+  if (includesAny(lower, ["transport", "road", "ride", "bus", "no car"])) detected.push("transport barrier");
   if (includesAny(lower, ["dialysis", "appointment", "care"])) detected.push("care continuity concern");
   if (includesAny(lower, ["spanish-speaking", "interpreter", "translation", "language barrier", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) detected.push("language access barrier");
   if ((includesAny(lower, ["rumor", "social media"]) && includesAny(lower, ["shelter", "beds", "capacity"]))) detected.push("unverified shelter capacity rumor");
+  if (includesAny(lower, ["cooling center", "heat outage", "no cooling", "overheated", "extreme heat", "heat illness"])) detected.push("cooling center or heat safety routing");
   if (hasHighSignal) return { level: "high", signals: detected };
   if (detected.length) return { level: "medium", signals: detected };
   return { level: "low", signals: ["planning or preparedness request"] };
@@ -162,7 +178,10 @@ function buildOfficialResourceChecks(text, result) {
   if (includesAny(lower, ["medication", "medicine", "dialysis", "insulin", "prenatal", "asthma", "oxygen", "care"])) {
     checks.push("Medical triage, clinic, pharmacy, or care coordinator: verify medication continuity, device power needs, dialysis/prenatal timing, and safe storage.");
   }
-  if (includesAny(lower, ["transport", "road", "ride", "bus"])) {
+  if (includesAny(lower, ["cooling center", "heat outage", "no cooling", "overheated", "extreme heat", "heat illness"])) {
+    checks.push("Public health heat line or cooling-center coordinator: verify cooling-center hours, accessible intake, hydration support, medication storage, and welfare-check options.");
+  }
+  if (includesAny(lower, ["transport", "road", "ride", "bus", "no car"])) {
     checks.push("Official transport desk or emergency management logistics: arrange accessible transport and avoid flooded roads.");
   }
   if (includesAny(lower, ["pet", "dog", "cat"])) {
@@ -260,6 +279,7 @@ function generateResponse(text) {
   if (lower.includes("power line")) actions.unshift("Move people away from floodwater and the downed line; contact emergency services or the utility through official channels.");
   if (includesAny(lower, ["pregnant", "prenatal", "insulin"])) actions.push("Route pregnancy, insulin, or prenatal-care continuity through official medical triage; record storage needs, timing, and callback details.");
   if (includesAny(lower, ["oxygen", "medical device", "backup battery"])) actions.unshift("Treat oxygen or powered medical device interruption as urgent; contact emergency services, utility medical priority channels, or clinical support.");
+  if (includesAny(lower, ["cooling center", "heat outage", "no cooling", "overheated", "extreme heat", "heat illness"])) actions.push("Route heat exposure, cooling-center access, welfare checks, medication storage, and hydration support through public health or official emergency-management heat-response channels.");
   if (includesAny(lower, ["spanish", "interpreter", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) actions.push("Request a qualified interpreter or language-access volunteer before collecting sensitive medication or registration details.");
   if (includesAny(lower, ["rumor", "social media", "capacity", "beds"])) actions.push("Verify shelter capacity only through official emergency management or shelter operations before routing evacuees.");
   const qs = [
@@ -319,11 +339,32 @@ function toText(data) {
   ].join("\n\n");
 }
 
+function renderDecisionBrief(data) {
+  const review = {
+    high: "Immediate escalation",
+    medium: "Responder review",
+    low: "Preparedness check",
+  }[data.risk_level];
+  briefReview.textContent = review;
+  briefReview.dataset.level = data.risk_level;
+  briefPlaybooks.textContent = `${data.playbook_references.length} playbooks`;
+  briefRoutes.textContent = `${data.official_resource_checks.length} routes`;
+  briefEvidence.textContent = data.audit_trace.includes("human_review_required=true") ? "Audit ready" : "Trace ready";
+}
+
 function runTriage() {
   const data = generateResponse(scenario.value);
   lastText = toText(data);
+  lastPacketText = [
+    `Risk level: ${data.risk_level}`,
+    "Responder packet:",
+    ...data.responder_packet.map((item) => `- ${item}`),
+    "Audit trace:",
+    ...data.audit_trace.map((item) => `- ${item}`),
+  ].join("\n");
   risk.textContent = `Risk level: ${data.risk_level}`;
   risk.dataset.level = data.risk_level;
+  renderDecisionBrief(data);
   renderList(signals, data.case_signals);
   renderList(playbook, data.playbook_references);
   renderList(plan, data.action_plan);
@@ -345,6 +386,15 @@ copy.addEventListener("click", async () => {
   copy.textContent = "Copied";
   window.setTimeout(() => {
     copy.textContent = "Copy handoff";
+  }, 1200);
+});
+
+copyPacket.addEventListener("click", async () => {
+  if (!lastPacketText) return;
+  await navigator.clipboard.writeText(lastPacketText);
+  copyPacket.textContent = "Copied";
+  window.setTimeout(() => {
+    copyPacket.textContent = "Copy packet";
   }, 1200);
 });
 

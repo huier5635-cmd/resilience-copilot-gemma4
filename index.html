@@ -31,6 +31,7 @@
         <div class="actions">
           <button id="run">Run triage</button>
           <button id="copy">Copy handoff</button>
+          <button id="copy-packet">Copy packet</button>
         </div>
       </section>
 
@@ -38,6 +39,24 @@
         <div class="risk-strip">
           <span class="risk" id="risk">Risk level</span>
           <span class="timestamp" id="timestamp">waiting</span>
+        </div>
+        <div class="decision-brief" aria-label="Decision brief">
+          <div class="brief-card">
+            <span>Review</span>
+            <strong id="brief-review">Waiting</strong>
+          </div>
+          <div class="brief-card">
+            <span>Playbooks</span>
+            <strong id="brief-playbooks">0</strong>
+          </div>
+          <div class="brief-card">
+            <span>Official Routes</span>
+            <strong id="brief-routes">0</strong>
+          </div>
+          <div class="brief-card">
+            <span>Evidence</span>
+            <strong id="brief-evidence">Pending</strong>
+          </div>
         </div>
         <div class="grid">
           <article class="block">

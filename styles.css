@@ -125,6 +125,7 @@ textarea {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 12px;
 }
@@ -134,7 +135,8 @@ textarea {
   background: var(--accent);
 }
 
-#copy {
+#copy,
+#copy-packet {
   color: var(--ink);
   background: #e8eeee;
 }
@@ -160,6 +162,50 @@ textarea {
 
 .risk[data-level="low"] {
   background: var(--low);
+}
+
+.decision-brief {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.brief-card {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  background: #fbfcfa;
+}
+
+.brief-card span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.brief-card strong {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.brief-card strong[data-level="high"] {
+  color: var(--danger);
+}
+
+.brief-card strong[data-level="medium"] {
+  color: var(--warn);
+}
+
+.brief-card strong[data-level="low"] {
+  color: var(--low);
 }
 
 .grid {
@@ -232,7 +278,8 @@ p {
 
 @media (max-width: 900px) {
   .shell,
-  .grid {
+  .grid,
+  .decision-brief {
     grid-template-columns: 1fr;
   }
 
