@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13 and refreshed on 2026-05-14. The local baseline passes demo, holdout, and stress gates; the current original enhancements add language-access support, a responder handoff note, and official resource checks for shelter, medical, transport, animal-service, interpreter, and emergency routing. Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
+Current status: submitted to Kaggle on 2026-05-13 and refreshed on 2026-05-14. The latest submitted version, EXP-021, adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, and an updated `resilience_copilot_submission_bundle_EXP021.zip` attachment. It passes the expanded 10-case stress gate and the submitted Kaggle page now documents the 12-section response and 10/10 stress validation. Kaggle Gemma 4 runtime evidence has been captured; the public GitHub repo is live; the durable GitHub Pages static demo is available; the YouTube video is uploaded as unlisted; and the polished pitch deck plus refreshed submission bundle are published in the repository.
 
 Submitted writeup:
 
@@ -32,11 +32,23 @@ Submitted writeup:
 
 ## Directory Map
 
-- `docs/`: Chinese experiment log, learning ledger, local validation manual, public notebook review, writeup draft, deployment notes, and pitch-deck evidence notes.
+- `docs/`: Chinese experiment log, learning ledger, local validation manual, public notebook review, final writeup candidate, judging evidence matrix, deployment notes, and pitch-deck evidence notes.
 - `notebooks/public_reproduction/`: downloaded public Kaggle notebooks and review notes.
 - `notebooks/experiments/`: our own Kaggle/local evidence notebooks.
 - `scripts/`: local validation, baseline, evidence, and asset checks.
 - `outputs/local_validation/`: generated reports and validation artifacts.
+
+## Storage Policy
+
+Gemma-related project files, browser profile data, downloads, evidence bundles, and Ollama model files should stay under `D:\Kaggle\Gemma4Good`.
+
+- Project workspace: `D:\Kaggle\Gemma4Good\New project 5`
+- Gemma Chrome profile: `D:\Kaggle\Gemma4Good\ChromeDebugProfile_Gemma`
+- Gemma downloads: `D:\Kaggle\Gemma4Good\Downloads`
+- Ollama data: `D:\Kaggle\Gemma4Good\Ollama\.ollama`
+- User environment variable: `OLLAMA_MODELS=D:\Kaggle\Gemma4Good\Ollama\.ollama\models`
+
+Do not intentionally download new Gemma/Kaggle assets to the C drive. The legacy paths `C:\ChromeDebugProfile_Gemma` and `C:\Users\Liaoke\.ollama` are junctions into D, so old commands can keep working without storing large data on C.
 
 ## Local Validation
 
@@ -57,7 +69,9 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
-- stress cases: 6/6
+- stress cases: 10/10 locally and in the submitted Kaggle writeup
+- writeup readiness: checked locally against word count, links, and evidence terms
+- judging packet: checked locally against rubric map, links, assets, and validation results
 - Kaggle checklist: 7/7
 - final Kaggle submission: created
 
@@ -72,15 +86,11 @@ python app\app.py
 
 Open `http://127.0.0.1:7861`.
 
-Temporary public demo backup:
-
-`https://applied-rico-impose-stated.trycloudflare.com`
-
 Durable public static demo:
 
 `https://huier5635-cmd.github.io/resilience-copilot-gemma4/`
 
-The Cloudflare link is a quick tunnel backup. Use the GitHub Pages link as the public demo in the Kaggle writeup.
+Use the GitHub Pages link as the public demo in the Kaggle writeup. Stale quick-tunnel links should stay out of the judge-facing Kaggle page.
 
 ## Assets
 

@@ -193,6 +193,22 @@ textarea {
   background: #fffaf0;
 }
 
+.playbook {
+  background: #f6f4ff;
+}
+
+.packet {
+  background: #f4fbf7;
+}
+
+.household {
+  background: #fff8f4;
+}
+
+.audit {
+  background: #f7f8fa;
+}
+
 ul,
 ol {
   margin: 0;

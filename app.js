@@ -2,11 +2,15 @@ const scenario = document.querySelector("#scenario");
 const risk = document.querySelector("#risk");
 const timestamp = document.querySelector("#timestamp");
 const signals = document.querySelector("#signals");
+const playbook = document.querySelector("#playbook");
 const plan = document.querySelector("#plan");
 const resources = document.querySelector("#resources");
 const questions = document.querySelector("#questions");
 const language = document.querySelector("#language");
 const handoff = document.querySelector("#handoff");
+const packet = document.querySelector("#packet");
+const household = document.querySelector("#household");
+const audit = document.querySelector("#audit");
 const boundary = document.querySelector("#boundary");
 const copy = document.querySelector("#copy");
 let lastText = "";
@@ -42,6 +46,51 @@ const actionTemplates = {
   ],
 };
 
+const playbookRules = [
+  {
+    id: "PB-LIFE-SAFETY-ESCALATE",
+    title: "Immediate life-safety escalation",
+    signals: ["high", "electrical hazard near floodwater", "oxygen or powered medical device risk", "immediate flood danger"],
+    summary: "Escalate immediate danger through emergency services or official local responders before giving routine logistics advice.",
+  },
+  {
+    id: "PB-SHELTER-CAPACITY",
+    title: "Official shelter capacity verification",
+    signals: ["evacuation or shelter need", "unverified shelter capacity rumor"],
+    summary: "Confirm live shelter capacity, accessibility, intake rules, and routing through official emergency management or shelter operations.",
+  },
+  {
+    id: "PB-MEDICATION-CONTINUITY",
+    title: "Medication and care continuity",
+    signals: ["older adult medication or care continuity", "pregnancy or insulin continuity risk", "care continuity concern"],
+    summary: "Route medication, insulin storage, dialysis, oxygen, prenatal, and asthma needs through official medical triage, clinic, pharmacy, or care coordinator channels.",
+  },
+  {
+    id: "PB-ACCESSIBLE-TRANSPORT",
+    title: "Accessible transport routing",
+    signals: ["transport barrier"],
+    summary: "Arrange accessible transport through official emergency management logistics, clinic, shelter, or responder channels; avoid flooded roads.",
+  },
+  {
+    id: "PB-PET-SHELTER",
+    title: "Pet-compatible shelter intake",
+    signals: ["pet-compatible shelter needed"],
+    summary: "Verify pet policy, species/size limits, carrier needs, vaccination paperwork, and animal-service options before routing a household.",
+  },
+  {
+    id: "PB-LANGUAGE-ACCESS",
+    title: "Qualified language access",
+    signals: ["language access barrier"],
+    summary: "Use qualified interpreters or language-access volunteers for medical, legal, registration, and shelter details; confirm understanding in the preferred language.",
+  },
+  {
+    id: "PB-LOW-RISK-PREPAREDNESS",
+    title: "Preparedness without over-escalation",
+    signals: ["low", "planning or preparedness request"],
+    summary: "Give a practical checklist, ask concise follow-up questions, and point to official local guidance for changing conditions.",
+  },
+];
+
 function includesAny(text, terms) {
   return terms.some((term) => text.includes(term));
 }
@@ -64,13 +113,14 @@ function detectRisk(text) {
   if (includesAny(lower, ["oxygen concentrator", "oxygen", "backup battery", "medical device"]) && includesAny(lower, ["power", "battery", "outage", "empty"])) {
     detected.push("oxygen or powered medical device risk");
   }
-  if (detected.length) return { level: "high", signals: detected };
+  const hasHighSignal = detected.length > 0;
   if (includesAny(lower, ["evacuated", "evacuation", "shelter"])) detected.push("evacuation or shelter need");
   if (includesAny(lower, ["pet", "dog", "cat"])) detected.push("pet-compatible shelter needed");
   if (includesAny(lower, ["transport", "road", "ride", "bus"])) detected.push("transport barrier");
   if (includesAny(lower, ["dialysis", "appointment", "care"])) detected.push("care continuity concern");
   if (includesAny(lower, ["spanish-speaking", "interpreter", "translation", "language barrier", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) detected.push("language access barrier");
   if ((includesAny(lower, ["rumor", "social media"]) && includesAny(lower, ["shelter", "beds", "capacity"]))) detected.push("unverified shelter capacity rumor");
+  if (hasHighSignal) return { level: "high", signals: detected };
   if (detected.length) return { level: "medium", signals: detected };
   return { level: "low", signals: ["planning or preparedness request"] };
 }
@@ -124,14 +174,78 @@ function buildOfficialResourceChecks(text, result) {
   return checks;
 }
 
-function buildResponderHandoff(result, actions, qs, languageSupport, officialChecks) {
+function selectPlaybookReferences(result) {
+  const signalSet = new Set([result.level, ...result.signals]);
+  const refs = playbookRules
+    .filter((rule) => rule.signals.some((signal) => signalSet.has(signal)))
+    .map((rule) => `${rule.id} - ${rule.title}: ${rule.summary}`);
+  if (!refs.length) {
+    const fallback = playbookRules.find((rule) => rule.id === "PB-LOW-RISK-PREPAREDNESS");
+    refs.push(`${fallback.id} - ${fallback.title}: ${fallback.summary}`);
+  }
+  return refs.slice(0, 5);
+}
+
+function buildResponderHandoff(result, playbookReferences, actions, qs, languageSupport, officialChecks) {
   return [
     `Risk: ${result.level}.`,
     `Signals: ${result.signals.join("; ")}.`,
+    `Playbook basis: ${playbookReferences.slice(0, 2).map((item) => item.split(":", 1)[0]).join(" ")}.`,
     `Immediate routing: ${actions.slice(0, 2).join(" ")}`,
     `Official checks: ${officialChecks.slice(0, 2).join(" ")}`,
     `Open information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access note: ${languageSupport[0]}`,
+  ];
+}
+
+function buildResponderPacket(result, playbookReferences, officialChecks, qs, languageSupport) {
+  const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
+  const primaryRoute = result.level === "high" && officialChecks.length > 1 ? officialChecks[1] : officialChecks[0];
+  return [
+    `Case priority: ${result.level}.`,
+    `Playbook IDs: ${playbookIds.join(", ")}.`,
+    `Primary official route: ${primaryRoute}`,
+    `Missing information: ${qs.slice(0, 2).join(" ")}`,
+    `Language/access cue: ${languageSupport[0]}`,
+    "Do not promise: live shelter capacity, medical conclusions, road safety, or transport availability without official confirmation.",
+    "Copy packet: risk, signals, callback/location, official route, open items, and access needs.",
+    `Signal summary: ${result.signals.join("; ")}.`,
+  ];
+}
+
+function buildHouseholdMessage(text, result, officialChecks, qs, languageSupport) {
+  const preferredLanguage = detectPreferredLanguage(text);
+  const message = [
+    "Plain English holding note: we are treating this as a priority case and routing it through official local channels.",
+    "Please keep the safest callback number available and tell the volunteer your current location.",
+    "We cannot confirm a shelter bed, road safety, medical next steps, or transport availability until official staff verify them.",
+  ];
+  if (result.level === "high") {
+    message.push("If immediate danger worsens, contact emergency services or local responders now.");
+  }
+  if (preferredLanguage) {
+    message.push(`Preferred language: ${preferredLanguage}; use a qualified interpreter before collecting sensitive details.`);
+    message.push("This is not a full translation of medical, legal, or registration details.");
+  } else {
+    message.push(languageSupport[0]);
+  }
+  message.push(`Official channel to check first: ${officialChecks[0]}`);
+  message.push(`Open question to answer next: ${qs[0]}`);
+  return message;
+}
+
+function buildAuditTrace(text, result, playbookReferences, officialChecks) {
+  const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
+  const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
+  return [
+    `risk_level=${result.level}`,
+    `signals=${result.signals.join(" | ")}`,
+    `playbook_ids=${playbookIds.join(" | ")}`,
+    `official_routes=${routeLabels.join(" | ")}`,
+    `language=${detectPreferredLanguage(text) || "none"}`,
+    "human_review_required=true",
+    "blocked_claims=medical conclusions | live shelter capacity | road safety | transport availability",
+    "response_contract=official-routes-first | no-invented-capacity | qualified-interpreter-when-needed",
   ];
 }
 
@@ -158,15 +272,23 @@ function generateResponse(text) {
   }
   const languageSupport = buildLanguageSupport(text);
   const officialChecks = buildOfficialResourceChecks(text, result);
-  const responderHandoff = buildResponderHandoff(result, actions, qs, languageSupport, officialChecks);
+  const playbookReferences = selectPlaybookReferences(result);
+  const responderHandoff = buildResponderHandoff(result, playbookReferences, actions, qs, languageSupport, officialChecks);
+  const responderPacket = buildResponderPacket(result, playbookReferences, officialChecks, qs, languageSupport);
+  const householdMessage = buildHouseholdMessage(text, result, officialChecks, qs, languageSupport);
+  const auditTrace = buildAuditTrace(text, result, playbookReferences, officialChecks);
   return {
     risk_level: result.level,
     case_signals: result.signals,
+    playbook_references: playbookReferences,
     action_plan: actions,
     official_resource_checks: officialChecks,
     clarifying_questions: qs,
     language_support: languageSupport,
     responder_handoff: responderHandoff,
+    responder_packet: responderPacket,
+    household_message: householdMessage,
+    audit_trace: auditTrace,
     safety_boundary: "Do not diagnose or invent real-time shelter capacity; use official local emergency channels for availability and urgent escalation.",
   };
 }
@@ -184,11 +306,15 @@ function toText(data) {
   return [
     `Risk level: ${data.risk_level}`,
     `Case signals:\n${data.case_signals.map((item) => `- ${item}`).join("\n")}`,
+    `Playbook references:\n${data.playbook_references.map((item) => `- ${item}`).join("\n")}`,
     `Action plan:\n${data.action_plan.map((item, idx) => `${idx + 1}. ${item}`).join("\n")}`,
     `Official resource checks:\n${data.official_resource_checks.map((item) => `- ${item}`).join("\n")}`,
     `Clarifying questions:\n${data.clarifying_questions.map((item) => `- ${item}`).join("\n")}`,
     `Language support:\n${data.language_support.map((item) => `- ${item}`).join("\n")}`,
     `Responder handoff:\n${data.responder_handoff.map((item) => `- ${item}`).join("\n")}`,
+    `Responder packet:\n${data.responder_packet.map((item) => `- ${item}`).join("\n")}`,
+    `Household message:\n${data.household_message.map((item) => `- ${item}`).join("\n")}`,
+    `Audit trace:\n${data.audit_trace.map((item) => `- ${item}`).join("\n")}`,
     `Safety boundary: ${data.safety_boundary}`,
   ].join("\n\n");
 }
@@ -199,11 +325,15 @@ function runTriage() {
   risk.textContent = `Risk level: ${data.risk_level}`;
   risk.dataset.level = data.risk_level;
   renderList(signals, data.case_signals);
+  renderList(playbook, data.playbook_references);
   renderList(plan, data.action_plan);
   renderList(resources, data.official_resource_checks);
   renderList(questions, data.clarifying_questions);
   renderList(language, data.language_support);
   renderList(handoff, data.responder_handoff);
+  renderList(packet, data.responder_packet);
+  renderList(household, data.household_message);
+  renderList(audit, data.audit_trace);
   boundary.textContent = data.safety_boundary;
   timestamp.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
