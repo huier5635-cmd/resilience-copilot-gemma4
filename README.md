@@ -1,6 +1,8 @@
 # The Gemma 4 Good Hackathon
 
-Kaggle project workspace for a prize-oriented Gemma 4 Good submission. This is a hackathon, not a normal tabular competition: there is no provided training dataset and the deliverable is a Kaggle Writeup plus public demo assets.
+Resilience Copilot is a safety-first disaster relief triage assistant built with Gemma 4. It uses a deterministic safety sidecar, auditable playbook grounding, official-resource verification, ICS-style transfer brief, structured JSON export, and local scenario validation to help volunteers turn messy crisis notes into safer responder-reviewed next actions.
+
+This is a hackathon project, not a normal tabular competition: there is no provided training dataset and the deliverable is a Kaggle Writeup plus public demo assets.
 
 ## Competition Reading
 
@@ -15,7 +17,7 @@ Kaggle project workspace for a prize-oriented Gemma 4 Good submission. This is a
 
 Working title: **Resilience Copilot**.
 
-Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
+Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, heatwave/cooling-center routing, source verification, and responder handoff.
 
 Current status: submitted to Kaggle on 2026-05-17 for EXP-029 with an ICS-style `Transfer brief`, 15/15 stress validation, public-synced GitHub Pages demo, and the EXP029 evidence bundle. EXP-029 adds shift-change handoff, incident snapshot, immediate objectives, safety constraints, resource status, communications, and operational-period rechecks.
 
@@ -23,12 +25,53 @@ Submitted writeup:
 
 `https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423`
 
+## Architecture
+
+```text
+Case Note
+  ↓
+Risk Signal Detector
+  ↓
+Playbook Matcher
+  ↓
+Gemma 4 Generation
+  ↓
+Safety Contract Checker
+  ↓
+16-section Response
+  ↓
+JSON Export + Audit Trace + Transfer Brief
+```
+
+- Gemma 4 is used for generation and responder-facing phrasing.
+- The deterministic safety sidecar runs before and after generation.
+- Pre-generation: detect risk signals and select playbook constraints.
+- Generation: Gemma 4 drafts a human-readable response under those constraints.
+- Post-generation: the safety contract blocks unsupported claims and exports audit fields.
+- The 16-section response includes `Transfer Brief`, `Audit Trace`, `Structured case export`, and a visible safety boundary.
+
+## Judge-Facing Example Cases
+
+| Case | Scenario | Expected behavior |
+| --- | --- | --- |
+| Oxygen + Power Outage | Older adult uses oxygen, the power is out, and the backup battery is nearly empty. | High risk, human review, emergency or utility medical-priority routing, no casual reassurance. |
+| Heatwave + Medication + Mobility Risk | Heatwave, older adult on medication, mobility limitation. | Cooling-center official check, transport-barrier handling, no invented facility capacity. |
+| Shelter Rumor + Language Barrier + Pet | Social media rumor says a shelter has beds, household has limited English proficiency, and the household has a pet. | Rumor quarantine, qualified interpreter, pet-compatible shelter check, no invented capacity. |
+
 ## Public Links
 
 - Public demo: https://huier5635-cmd.github.io/resilience-copilot-gemma4/
 - Public code: https://github.com/huier5635-cmd/resilience-copilot-gemma4
 - YouTube video: https://youtu.be/CmqCV8Ic9cY
 - Kaggle Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
+
+## Gemma 4 Evidence
+
+Gemma 4 was executed in a Kaggle Notebook using the official model resource:
+
+`/kaggle/input/models/google/gemma-4/transformers/gemma-4-e2b-it/1`
+
+The notebook records the model path, runtime environment, prompt, response, latency, and generated token count. The intended production pattern is Gemma 4 for language generation, with the deterministic safety sidecar enforcing the response contract before and after generation. This project does not claim fine-tuning, live deployment, diagnosis, treatment, or live shelter capacity.
 
 ## Directory Map
 
@@ -70,12 +113,14 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
-- stress cases: 15/15 locally; the latest submitted EXP-028 Kaggle writeup documents 14/14
+- stress cases: 15/15 locally; the latest submitted EXP-029 Kaggle writeup documents 15/15
 - writeup readiness: checked locally against word count, links, and evidence terms
 - judging packet: checked locally against rubric map, links, assets, and validation results
-- public evidence surface: GitHub Pages verified on 2026-05-15 with `Responder packet`, `Household message`, and `Audit trace`
+- public evidence surface: GitHub Pages verified on 2026-05-17 with `Transfer Brief`, `Source Verification Ledger`, `Responder packet`, `Household message`, `Audit trace`, and `Structured case export`
 - Kaggle checklist: 7/7
 - final Kaggle submission: refreshed to EXP-029 on 2026-05-17
+
+Validation is scenario-based because the hackathon provides no official training dataset. The current scenario gate is demo 2/2, holdout 2/2, stress 15/15, and `ready_to_submit=true`.
 
 ## Local Demo
 
@@ -100,6 +145,7 @@ Use the GitHub Pages link as the public demo in the Kaggle writeup. Stale quick-
 - Pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v2.pptx`
 - Static deployment package: `outputs/submission_assets/public_demo_static.zip`
 - Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
+- Latest submitted evidence bundle: `resilience_copilot_submission_bundle_EXP029.zip`
 - Evidence report: `outputs/local_validation/evidence_report.md`
 
 Root-level public repo assets:
