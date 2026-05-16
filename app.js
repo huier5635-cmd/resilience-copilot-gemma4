@@ -7,6 +7,7 @@ const playbook = document.querySelector("#playbook");
 const plan = document.querySelector("#plan");
 const resources = document.querySelector("#resources");
 const sourceVerification = document.querySelector("#source-verification");
+const transferBrief = document.querySelector("#transfer-brief");
 const questions = document.querySelector("#questions");
 const language = document.querySelector("#language");
 const handoff = document.querySelector("#handoff");
@@ -255,6 +256,23 @@ function buildSourceVerification(text, result, officialChecks) {
   return ledger;
 }
 
+function buildTransferBrief(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, questions, languageSupport) {
+  const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
+  const routeLabels = officialChecks.slice(0, 3).map((item) => item.split(":", 1)[0]);
+  const preferredLanguage = detectPreferredLanguage(text) || "none";
+  return [
+    "ICS 201 alignment: concise transfer note for situation summary, current actions, resource status, communications, and prepared-by handoff.",
+    `Incident snapshot: risk=${result.level}; signals=${result.signals.join(" | ")}; playbooks=${playbookIds.join(" | ")}.`,
+    "Immediate objectives: protect life safety first, verify official routes, collect callback/location/access needs, and keep final routing with a human responder.",
+    "Safety constraints: do not diagnose, do not promise live capacity, do not guarantee routes or transport, and do not use child or ad hoc interpreters for sensitive details.",
+    `Resource status: pending confirmation through ${routeLabels.join(" | ")}; unresolved resources stay unknown until staff confirm them.`,
+    `Communications: record callback, current location, preferred language=${preferredLanguage}, official channel contacted, time checked, and next owner.`,
+    `Unresolved questions: ${questions.slice(0, 2).join(" ")}`,
+    `Verification carryover: ${sourceLedger.slice(0, 2).join(" ")} ${languageSupport[0]}`,
+    "Operational period check: re-verify facility hours, road status, transport ETA, welfare-check status, and capacity before each routing decision.",
+  ];
+}
+
 function selectPlaybookReferences(result) {
   const signalSet = new Set([result.level, ...result.signals]);
   const refs = playbookRules
@@ -267,7 +285,7 @@ function selectPlaybookReferences(result) {
   return refs.slice(0, 5);
 }
 
-function buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger) {
+function buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger, transferBriefItems) {
   return [
     `Risk: ${result.level}.`,
     `Signals: ${result.signals.join("; ")}.`,
@@ -276,12 +294,13 @@ function buildResponderHandoff(result, humanReviewReason, playbookReferences, ac
     `Immediate routing: ${actions.slice(0, 2).join(" ")}`,
     `Official checks: ${officialChecks.slice(0, 2).join(" ")}`,
     `Source verification: ${sourceLedger.slice(0, 2).join(" ")}`,
+    `Transfer brief: ${transferBriefItems.slice(1, 3).join(" ")}`,
     `Open information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access note: ${languageSupport[0]}`,
   ];
 }
 
-function buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs, languageSupport) {
+function buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems, qs, languageSupport) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const primaryRoute = result.level === "high" && officialChecks.length > 1 ? officialChecks[1] : officialChecks[0];
   return [
@@ -290,6 +309,7 @@ function buildResponderPacket(result, humanReviewReason, playbookReferences, off
     `Playbook IDs: ${playbookIds.join(", ")}.`,
     `Primary official route: ${primaryRoute}`,
     `Source verification: ${sourceLedger.slice(0, 2).join(" ")}`,
+    `Transfer brief: ${transferBriefItems[1]} ${transferBriefItems[4]}`,
     `Missing information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access cue: ${languageSupport[0]}`,
     "Do not promise: live shelter capacity, medical conclusions, road safety, or transport availability without official confirmation.",
@@ -319,7 +339,7 @@ function buildHouseholdMessage(text, result, officialChecks, qs, languageSupport
   return message;
 }
 
-function buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger) {
+function buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
   return [
@@ -328,6 +348,7 @@ function buildAuditTrace(text, result, humanReviewReason, playbookReferences, of
     `playbook_ids=${playbookIds.join(" | ")}`,
     `official_routes=${routeLabels.join(" | ")}`,
     `source_verification=${sourceLedger.map((item) => item.split(":", 1)[0]).join(" | ")}`,
+    `transfer_brief=${transferBriefItems.slice(0, 6).map((item) => item.split(":", 1)[0]).join(" | ")}`,
     `language=${detectPreferredLanguage(text) || "none"}`,
     "human_review_required=true",
     `human_review_reason=${humanReviewReason.map((reason) => reason.split(":", 1)[0]).join(" | ")}`,
@@ -345,7 +366,7 @@ function fingerprint(text) {
   return `RC-${(hash >>> 0).toString(16).padStart(8, "0")}`;
 }
 
-function buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, questions) {
+function buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems, questions) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
   const reviewLevel = {
@@ -354,7 +375,7 @@ function buildCaseExport(text, result, humanReviewReason, playbookReferences, of
     low: "preparedness_check",
   }[result.level];
   return {
-    contract_version: "resilience-copilot-exp028",
+    contract_version: "resilience-copilot-exp029",
     case_fingerprint: fingerprint(text),
     risk_level: result.level,
     review_level: reviewLevel,
@@ -363,6 +384,7 @@ function buildCaseExport(text, result, humanReviewReason, playbookReferences, of
     playbook_ids: playbookIds,
     official_routes: routeLabels,
     source_verification: sourceLedger,
+    transfer_brief: transferBriefItems,
     required_human_review: true,
     blocked_claims: ["medical conclusions", "live shelter capacity", "road safety", "transport availability"],
     language: detectPreferredLanguage(text) || "none",
@@ -372,6 +394,7 @@ function buildCaseExport(text, result, humanReviewReason, playbookReferences, of
       "no-invented-capacity",
       "qualified-interpreter-when-needed",
       "human-responder-final-decision",
+      "ics-style-transfer-brief",
     ],
   };
 }
@@ -403,11 +426,12 @@ function generateResponse(text) {
   const playbookReferences = selectPlaybookReferences(result);
   const humanReviewReason = buildHumanReviewReason(text, result);
   const sourceLedger = buildSourceVerification(text, result, officialChecks);
-  const responderHandoff = buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger);
-  const responderPacket = buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs, languageSupport);
+  const transferBriefItems = buildTransferBrief(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs, languageSupport);
+  const responderHandoff = buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger, transferBriefItems);
+  const responderPacket = buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems, qs, languageSupport);
   const householdMessage = buildHouseholdMessage(text, result, officialChecks, qs, languageSupport);
-  const auditTrace = buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger);
-  const structuredExport = buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs);
+  const auditTrace = buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems);
+  const structuredExport = buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, transferBriefItems, qs);
   return {
     risk_level: result.level,
     case_signals: result.signals,
@@ -416,6 +440,7 @@ function generateResponse(text) {
     action_plan: actions,
     official_resource_checks: officialChecks,
     source_verification: sourceLedger,
+    transfer_brief: transferBriefItems,
     clarifying_questions: qs,
     language_support: languageSupport,
     responder_handoff: responderHandoff,
@@ -445,6 +470,7 @@ function toText(data) {
     `Action plan:\n${data.action_plan.map((item, idx) => `${idx + 1}. ${item}`).join("\n")}`,
     `Official resource checks:\n${data.official_resource_checks.map((item) => `- ${item}`).join("\n")}`,
     `Source verification ledger:\n${data.source_verification.map((item) => `- ${item}`).join("\n")}`,
+    `Transfer brief:\n${data.transfer_brief.map((item) => `- ${item}`).join("\n")}`,
     `Clarifying questions:\n${data.clarifying_questions.map((item) => `- ${item}`).join("\n")}`,
     `Language support:\n${data.language_support.map((item) => `- ${item}`).join("\n")}`,
     `Responder handoff:\n${data.responder_handoff.map((item) => `- ${item}`).join("\n")}`,
@@ -481,6 +507,8 @@ function runTriage() {
     ...data.responder_packet.map((item) => `- ${item}`),
     "Source verification ledger:",
     ...data.source_verification.map((item) => `- ${item}`),
+    "Transfer brief:",
+    ...data.transfer_brief.map((item) => `- ${item}`),
     "Audit trace:",
     ...data.audit_trace.map((item) => `- ${item}`),
   ].join("\n");
@@ -493,6 +521,7 @@ function runTriage() {
   renderList(plan, data.action_plan);
   renderList(resources, data.official_resource_checks);
   renderList(sourceVerification, data.source_verification);
+  renderList(transferBrief, data.transfer_brief);
   renderList(questions, data.clarifying_questions);
   renderList(language, data.language_support);
   renderList(handoff, data.responder_handoff);
