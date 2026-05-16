@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-17 for EXP-028 with source verification, 14/14 stress validation, and the EXP028 evidence bundle. EXP-029 is the current local candidate: it adds an ICS-style `Transfer brief` for shift-change handoff, incident snapshot, immediate objectives, safety constraints, resource status, communications, and operational-period rechecks; local stress validation now passes 15/15. EXP-029 should be synced to the public demo and Kaggle only after the final bundle is rebuilt and checked.
+Current status: submitted to Kaggle on 2026-05-17 for EXP-029 with an ICS-style `Transfer brief`, 15/15 stress validation, public-synced GitHub Pages demo, and the EXP029 evidence bundle. EXP-029 adds shift-change handoff, incident snapshot, immediate objectives, safety constraints, resource status, communications, and operational-period rechecks.
 
 Submitted writeup:
 
@@ -75,7 +75,7 @@ Current final gate:
 - judging packet: checked locally against rubric map, links, assets, and validation results
 - public evidence surface: GitHub Pages verified on 2026-05-15 with `Responder packet`, `Household message`, and `Audit trace`
 - Kaggle checklist: 7/7
-- final Kaggle submission: created
+- final Kaggle submission: refreshed to EXP-029 on 2026-05-17
 
 ## Local Demo
 
@@ -123,7 +123,7 @@ EXP-026 local candidate: the demo now includes `Human Review Reason` and the str
 
 EXP-028 submitted candidate: the demo includes `Source Verification Ledger` and the structured export includes `source_verification`. This raised the local stress gate to 14/14 and was submitted to Kaggle on 2026-05-17.
 
-EXP-029 local candidate: the demo now includes `Transfer Brief` and the structured export includes `transfer_brief` plus `ics-style-transfer-brief`. This raises the local stress gate to 15/15. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
+EXP-029 submitted candidate: the demo now includes `Transfer Brief` and the structured export includes `transfer_brief` plus `ics-style-transfer-brief`. This raises the local stress gate to 15/15 and was submitted to Kaggle on 2026-05-17. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
 
 ## Submission Policy
 
