@@ -17,7 +17,7 @@ Working title: **Resilience Copilot**.
 
 Goal: a safety-first crisis-relief assistant for floods, evacuation, medication access, shelter triage, pet-compatible shelter routing, and responder handoff. The first baseline is deliberately narrow so we can prove the loop quickly, then add Gemma 4 evidence and small original improvements.
 
-Current status: submitted to Kaggle on 2026-05-13, refreshed on 2026-05-14, and refreshed again on 2026-05-15 for EXP-023. The latest submitted Kaggle version adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, a decision brief, copy-ready packet button, heatwave/cooling-center official routing, and an updated `resilience_copilot_submission_bundle_EXP023.zip` attachment. It passes the expanded 11-case stress gate and the submitted Kaggle page documents the 12-section response and 11/11 stress validation. EXP-024 added a structured case export JSON with case fingerprint, review level, playbook IDs, official routes, blocked claims, and response contract. EXP-026 is the current local candidate: it adds explicit `Human review reason` to the response, audit trace, responder packet, and case export; local stress validation now passes 13/13. EXP-022 also refreshed the public GitHub Pages demo at the same URL, and EXP-026 should be synced before a Kaggle refresh.
+Current status: submitted to Kaggle on 2026-05-13, refreshed on 2026-05-14, and refreshed again on 2026-05-15 for EXP-023. The latest submitted Kaggle version adds auditable playbook grounding, a copy-ready responder packet, a safe household-facing holding message, a machine-readable audit trace, a Kaggle-ready final writeup check, a judge-facing evidence matrix, a decision brief, copy-ready packet button, heatwave/cooling-center official routing, and an updated `resilience_copilot_submission_bundle_EXP023.zip` attachment. It passes the expanded 11-case stress gate and the submitted Kaggle page documents the 12-section response and 11/11 stress validation. EXP-024 added structured case export. EXP-026 added explicit `Human review reason`. EXP-028 is the current local candidate: it adds a `Source verification ledger` for stale social-media claims, live-capacity rumors, route/facility freshness, and official-channel evidence; local stress validation now passes 14/14. EXP-028 should be synced before a Kaggle refresh.
 
 Submitted writeup:
 
@@ -70,7 +70,7 @@ Current final gate:
 - `ready_to_submit=true`
 - demo cases: 2/2
 - holdout cases: 2/2
-- stress cases: 13/13 locally; the latest submitted EXP-023 Kaggle writeup documents 11/11
+- stress cases: 14/14 locally; the latest submitted EXP-023 Kaggle writeup documents 11/11
 - writeup readiness: checked locally against word count, links, and evidence terms
 - judging packet: checked locally against rubric map, links, assets, and validation results
 - public evidence surface: GitHub Pages verified on 2026-05-15 with `Responder packet`, `Household message`, and `Audit trace`
@@ -120,6 +120,8 @@ EXP-023 Kaggle refresh: the demo now shows a compact decision brief, supports `C
 EXP-024 local/public demo candidate: the demo now includes `Copy JSON` and a structured case export with `case_fingerprint`, `review_level`, `required_human_review`, `blocked_claims`, and `response_contract`. This has not consumed another Kaggle submission slot yet.
 
 EXP-026 local candidate: the demo now includes `Human Review Reason` and the structured export includes `human_review_reason`. This raises the local stress gate to 13/13 and is a low-risk original enhancement for the next Kaggle refresh after public demo sync.
+
+EXP-028 local candidate: the demo now includes `Source Verification Ledger` and the structured export includes `source_verification`. This raises the local stress gate to 14/14 and is the next literature-backed original enhancement for the final Kaggle refresh.
 
 ## Submission Policy
 

@@ -241,6 +241,10 @@ textarea {
   background: #fffaf0;
 }
 
+.source {
+  background: #f8fbff;
+}
+
 .playbook {
   background: #f6f4ff;
 }

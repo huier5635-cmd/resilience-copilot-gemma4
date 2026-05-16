@@ -6,6 +6,7 @@ const reviewReason = document.querySelector("#review-reason");
 const playbook = document.querySelector("#playbook");
 const plan = document.querySelector("#plan");
 const resources = document.querySelector("#resources");
+const sourceVerification = document.querySelector("#source-verification");
 const questions = document.querySelector("#questions");
 const language = document.querySelector("#language");
 const handoff = document.querySelector("#handoff");
@@ -231,6 +232,29 @@ function buildOfficialResourceChecks(text, result) {
   return checks;
 }
 
+function buildSourceVerification(text, result, officialChecks) {
+  const lower = text.toLowerCase();
+  const ledger = ["Known: case details are user- or volunteer-reported and must be treated as operational notes until official staff verify live conditions."];
+  if (includesAny(lower, ["rumor", "social media", "heard", "probably", "may have beds", "capacity", "beds"])) {
+    ledger.push("Rumor quarantine: do not repeat social-media, word-of-mouth, bed-count, or capacity claims until official shelter operations confirms them.");
+  }
+  if (includesAny(lower, ["shelter", "cooling center", "road", "transport", "ride", "bus", "no car"])) {
+    ledger.push("Freshness check: verify timestamp, current route status, facility hours, intake rules, accessibility, and transport availability before sharing directions.");
+  }
+  if (includesAny(lower, ["insulin", "dialysis", "oxygen", "medication", "medicine", "prenatal", "asthma", "medical device"])) {
+    ledger.push("Clinical source check: route medication, oxygen, insulin, dialysis, prenatal, or device-power details through medical triage, clinic, pharmacy, or care coordinator confirmation.");
+  }
+  if (detectPreferredLanguage(text)) {
+    ledger.push("Language source check: use a qualified interpreter for safety-critical details; do not treat child or ad hoc translation as verified.");
+  }
+  if (result.level === "high") {
+    ledger.push("Escalation evidence: record callback, location, official route contacted, and what remains unknown before final responder decision.");
+  }
+  ledger.push(`Official channels to verify first: ${officialChecks.slice(0, 3).map((item) => item.split(":", 1)[0]).join(" | ")}.`);
+  ledger.push("Public message rule: say what is known, what is unknown, and what is being checked; avoid unverified numbers or guarantees.");
+  return ledger;
+}
+
 function selectPlaybookReferences(result) {
   const signalSet = new Set([result.level, ...result.signals]);
   const refs = playbookRules
@@ -243,7 +267,7 @@ function selectPlaybookReferences(result) {
   return refs.slice(0, 5);
 }
 
-function buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks) {
+function buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger) {
   return [
     `Risk: ${result.level}.`,
     `Signals: ${result.signals.join("; ")}.`,
@@ -251,12 +275,13 @@ function buildResponderHandoff(result, humanReviewReason, playbookReferences, ac
     `Playbook basis: ${playbookReferences.slice(0, 2).map((item) => item.split(":", 1)[0]).join(" ")}.`,
     `Immediate routing: ${actions.slice(0, 2).join(" ")}`,
     `Official checks: ${officialChecks.slice(0, 2).join(" ")}`,
+    `Source verification: ${sourceLedger.slice(0, 2).join(" ")}`,
     `Open information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access note: ${languageSupport[0]}`,
   ];
 }
 
-function buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, qs, languageSupport) {
+function buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs, languageSupport) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const primaryRoute = result.level === "high" && officialChecks.length > 1 ? officialChecks[1] : officialChecks[0];
   return [
@@ -264,6 +289,7 @@ function buildResponderPacket(result, humanReviewReason, playbookReferences, off
     `Human review reason: ${humanReviewReason.slice(0, 2).join(" ")}`,
     `Playbook IDs: ${playbookIds.join(", ")}.`,
     `Primary official route: ${primaryRoute}`,
+    `Source verification: ${sourceLedger.slice(0, 2).join(" ")}`,
     `Missing information: ${qs.slice(0, 2).join(" ")}`,
     `Language/access cue: ${languageSupport[0]}`,
     "Do not promise: live shelter capacity, medical conclusions, road safety, or transport availability without official confirmation.",
@@ -293,7 +319,7 @@ function buildHouseholdMessage(text, result, officialChecks, qs, languageSupport
   return message;
 }
 
-function buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks) {
+function buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
   return [
@@ -301,6 +327,7 @@ function buildAuditTrace(text, result, humanReviewReason, playbookReferences, of
     `signals=${result.signals.join(" | ")}`,
     `playbook_ids=${playbookIds.join(" | ")}`,
     `official_routes=${routeLabels.join(" | ")}`,
+    `source_verification=${sourceLedger.map((item) => item.split(":", 1)[0]).join(" | ")}`,
     `language=${detectPreferredLanguage(text) || "none"}`,
     "human_review_required=true",
     `human_review_reason=${humanReviewReason.map((reason) => reason.split(":", 1)[0]).join(" | ")}`,
@@ -318,7 +345,7 @@ function fingerprint(text) {
   return `RC-${(hash >>> 0).toString(16).padStart(8, "0")}`;
 }
 
-function buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, questions) {
+function buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, questions) {
   const playbookIds = playbookReferences.map((item) => item.split(" - ", 1)[0]);
   const routeLabels = officialChecks.map((item) => item.split(":", 1)[0]);
   const reviewLevel = {
@@ -327,7 +354,7 @@ function buildCaseExport(text, result, humanReviewReason, playbookReferences, of
     low: "preparedness_check",
   }[result.level];
   return {
-    contract_version: "resilience-copilot-exp026",
+    contract_version: "resilience-copilot-exp028",
     case_fingerprint: fingerprint(text),
     risk_level: result.level,
     review_level: reviewLevel,
@@ -335,6 +362,7 @@ function buildCaseExport(text, result, humanReviewReason, playbookReferences, of
     human_review_reason: humanReviewReason,
     playbook_ids: playbookIds,
     official_routes: routeLabels,
+    source_verification: sourceLedger,
     required_human_review: true,
     blocked_claims: ["medical conclusions", "live shelter capacity", "road safety", "transport availability"],
     language: detectPreferredLanguage(text) || "none",
@@ -374,11 +402,12 @@ function generateResponse(text) {
   const officialChecks = buildOfficialResourceChecks(text, result);
   const playbookReferences = selectPlaybookReferences(result);
   const humanReviewReason = buildHumanReviewReason(text, result);
-  const responderHandoff = buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks);
-  const responderPacket = buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, qs, languageSupport);
+  const sourceLedger = buildSourceVerification(text, result, officialChecks);
+  const responderHandoff = buildResponderHandoff(result, humanReviewReason, playbookReferences, actions, qs, languageSupport, officialChecks, sourceLedger);
+  const responderPacket = buildResponderPacket(result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs, languageSupport);
   const householdMessage = buildHouseholdMessage(text, result, officialChecks, qs, languageSupport);
-  const auditTrace = buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks);
-  const structuredExport = buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, qs);
+  const auditTrace = buildAuditTrace(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger);
+  const structuredExport = buildCaseExport(text, result, humanReviewReason, playbookReferences, officialChecks, sourceLedger, qs);
   return {
     risk_level: result.level,
     case_signals: result.signals,
@@ -386,6 +415,7 @@ function generateResponse(text) {
     playbook_references: playbookReferences,
     action_plan: actions,
     official_resource_checks: officialChecks,
+    source_verification: sourceLedger,
     clarifying_questions: qs,
     language_support: languageSupport,
     responder_handoff: responderHandoff,
@@ -414,6 +444,7 @@ function toText(data) {
     `Playbook references:\n${data.playbook_references.map((item) => `- ${item}`).join("\n")}`,
     `Action plan:\n${data.action_plan.map((item, idx) => `${idx + 1}. ${item}`).join("\n")}`,
     `Official resource checks:\n${data.official_resource_checks.map((item) => `- ${item}`).join("\n")}`,
+    `Source verification ledger:\n${data.source_verification.map((item) => `- ${item}`).join("\n")}`,
     `Clarifying questions:\n${data.clarifying_questions.map((item) => `- ${item}`).join("\n")}`,
     `Language support:\n${data.language_support.map((item) => `- ${item}`).join("\n")}`,
     `Responder handoff:\n${data.responder_handoff.map((item) => `- ${item}`).join("\n")}`,
@@ -448,6 +479,8 @@ function runTriage() {
     ...data.human_review_reason.map((item) => `- ${item}`),
     "Responder packet:",
     ...data.responder_packet.map((item) => `- ${item}`),
+    "Source verification ledger:",
+    ...data.source_verification.map((item) => `- ${item}`),
     "Audit trace:",
     ...data.audit_trace.map((item) => `- ${item}`),
   ].join("\n");
@@ -459,6 +492,7 @@ function runTriage() {
   renderList(playbook, data.playbook_references);
   renderList(plan, data.action_plan);
   renderList(resources, data.official_resource_checks);
+  renderList(sourceVerification, data.source_verification);
   renderList(questions, data.clarifying_questions);
   renderList(language, data.language_support);
   renderList(handoff, data.responder_handoff);
