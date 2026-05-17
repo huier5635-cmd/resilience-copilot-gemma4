@@ -29,17 +29,17 @@ Submitted writeup:
 
 ```text
 Case Note
-  ↓
+  ->
 Risk Signal Detector
-  ↓
+  ->
 Playbook Matcher
-  ↓
+  ->
 Gemma 4 Generation
-  ↓
+  ->
 Safety Contract Checker
-  ↓
+  ->
 16-section Response
-  ↓
+  ->
 JSON Export + Audit Trace + Transfer Brief
 ```
 
@@ -73,26 +73,18 @@ Gemma 4 was executed in a Kaggle Notebook using the official model resource:
 
 The notebook records the model path, runtime environment, prompt, response, latency, and generated token count. The intended production pattern is Gemma 4 for language generation, with the deterministic safety sidecar enforcing the response contract before and after generation. This project does not claim fine-tuning, live deployment, diagnosis, treatment, or live shelter capacity.
 
-## Directory Map
+## Submission Bundle Contents
 
-- `docs/`: selected judge-facing writeup and evidence documents. Working notes stay local and are not part of the GitHub display surface.
-- `notebooks/public_reproduction/`: downloaded public Kaggle notebooks and review notes.
-- `notebooks/experiments/`: our own Kaggle/local evidence notebooks.
-- `scripts/`: local validation, baseline, evidence, and asset checks.
-- `outputs/local_validation/`: generated reports and validation artifacts.
+The final judge-facing bundle is a compact review packet, not a full working archive.
 
-## Storage Policy
-
-Gemma-related project files, browser profile data, downloads, evidence bundles, and Ollama model files should stay under `D:\Kaggle\Gemma4Good`.
-
-- Project workspace: `D:\Kaggle\Gemma4Good\New project 5`
-- Gemma Chrome profile: `D:\Kaggle\Gemma4Good\ChromeDebugProfile_Gemma`
-- Gemma downloads: `D:\Kaggle\Gemma4Good\Downloads`
-- Gemma temp/check files: `D:\Kaggle\Gemma4Good\Temp`
-- Ollama data: `D:\Kaggle\Gemma4Good\Ollama\.ollama`
-- User environment variable: `OLLAMA_MODELS=D:\Kaggle\Gemma4Good\Ollama\.ollama\models`
-
-Do not intentionally download new Gemma/Kaggle assets to the C drive. For temporary verification downloads, use `D:\Kaggle\Gemma4Good\Temp` instead of `%TEMP%`. The legacy paths `C:\ChromeDebugProfile_Gemma` and `C:\Users\Liaoke\.ollama` are junctions into D, so old commands can keep working without storing large data on C.
+- `docs/`: final Kaggle writeup and judging evidence matrix.
+- `data/cases/`: demo, holdout, and stress scenarios used by local validation.
+- `knowledge_base/`: auditable emergency playbook rules.
+- `app/` and `public_demo/`: runnable local demo and static GitHub Pages demo.
+- `notebooks/experiments/`: Kaggle Gemma 4 evidence script.
+- `notebooks/public_reproduction/`: compact review summary only; raw public notebooks are not included.
+- `scripts/`: minimal validation and bundle scripts needed to reproduce the local gate.
+- `outputs/local_validation/`: final EXP-029 validation reports and evidence screenshots.
 
 ## Local Validation
 
@@ -137,7 +129,7 @@ Durable public static demo:
 
 `https://huier5635-cmd.github.io/resilience-copilot-gemma4/`
 
-Use the GitHub Pages link as the public demo in the Kaggle writeup. Stale quick-tunnel links should stay out of the judge-facing Kaggle page.
+Use the GitHub Pages link as the public demo in the Kaggle writeup. Deprecated temporary links should stay out of the judge-facing Kaggle page.
 
 ## Assets
 
@@ -160,10 +152,3 @@ python scripts\build_submission_bundle.py
 ```
 
 EXP-029 submitted version: the demo includes `Transfer Brief`, `Source Verification Ledger`, `Human Review Reason`, `Copy JSON`, `transfer_brief`, `source_verification`, and `ics-style-transfer-brief`. The local stress gate is 15/15, and the project was submitted to Kaggle on 2026-05-17 with `resilience_copilot_submission_bundle_EXP029.zip`. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
-
-## Submission Policy
-
-- No direct Kaggle submission until `scripts\run_local_validation.py` reports the required assets and evidence are ready. The 2026-05-13 submission followed this rule.
-- Public reproduction is capped at two online attempts per day.
-- At least one original or micro-tuning branch must remain prepared for every submission round.
-- Every experiment must record hypothesis, command, local result, online result if any, rank if applicable, and next action.
