@@ -46,7 +46,7 @@ JSON Export + Audit Trace + Transfer Brief
 - Gemma 4 is used for generation and responder-facing phrasing.
 - The deterministic safety sidecar runs before and after generation.
 - Pre-generation: detect risk signals and select playbook constraints.
-- Generation: Gemma 4 drafts a human-readable response under those constraints.
+- Generation: Gemma 4 composes a human-readable response under those constraints.
 - Post-generation: the safety contract blocks unsupported claims and exports audit fields.
 - The 16-section response includes `Transfer Brief`, `Audit Trace`, `Structured case export`, and a visible safety boundary.
 
@@ -75,7 +75,7 @@ The notebook records the model path, runtime environment, prompt, response, late
 
 ## Directory Map
 
-- `docs/`: local project notes plus selected judge-facing writeup and evidence documents. Internal working notes stay local and are not part of the GitHub display surface.
+- `docs/`: selected judge-facing writeup and evidence documents. Working notes stay local and are not part of the GitHub display surface.
 - `notebooks/public_reproduction/`: downloaded public Kaggle notebooks and review notes.
 - `notebooks/experiments/`: our own Kaggle/local evidence notebooks.
 - `scripts/`: local validation, baseline, evidence, and asset checks.
@@ -141,7 +141,7 @@ Use the GitHub Pages link as the public demo in the Kaggle writeup. Stale quick-
 
 ## Assets
 
-- Video draft: `outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
+- Video source asset: `outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
 - Pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v2.pptx`
 - Static deployment package: `outputs/submission_assets/public_demo_static.zip`
 - Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
@@ -159,17 +159,7 @@ Refresh the submission bundle after changing project assets:
 python scripts\build_submission_bundle.py
 ```
 
-EXP-022 public repo refresh: GitHub Pages and the public source/demo were refreshed on 2026-05-15. This did not consume a Kaggle final submission slot because the Kaggle writeup URL and public demo URL stayed unchanged.
-
-EXP-023 Kaggle refresh: the demo now shows a compact decision brief, supports `Copy packet`, and includes heatwave/cooling-center routing through public health and official emergency-management channels. Kaggle was refreshed on 2026-05-15 with the EXP-023 writeup and `resilience_copilot_submission_bundle_EXP023.zip`.
-
-EXP-024 local/public demo candidate: the demo now includes `Copy JSON` and a structured case export with `case_fingerprint`, `review_level`, `required_human_review`, `blocked_claims`, and `response_contract`. This has not consumed another Kaggle submission slot yet.
-
-EXP-026 local candidate: the demo now includes `Human Review Reason` and the structured export includes `human_review_reason`. This raises the local stress gate to 13/13 and is a low-risk original enhancement for the next Kaggle refresh after public demo sync.
-
-EXP-028 submitted candidate: the demo includes `Source Verification Ledger` and the structured export includes `source_verification`. This raised the local stress gate to 14/14 and was submitted to Kaggle on 2026-05-17.
-
-EXP-029 submitted candidate: the demo now includes `Transfer Brief` and the structured export includes `transfer_brief` plus `ics-style-transfer-brief`. This raises the local stress gate to 15/15 and was submitted to Kaggle on 2026-05-17. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
+EXP-029 submitted version: the demo includes `Transfer Brief`, `Source Verification Ledger`, `Human Review Reason`, `Copy JSON`, `transfer_brief`, `source_verification`, and `ics-style-transfer-brief`. The local stress gate is 15/15, and the project was submitted to Kaggle on 2026-05-17 with `resilience_copilot_submission_bundle_EXP029.zip`. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
 
 ## Submission Policy
 
