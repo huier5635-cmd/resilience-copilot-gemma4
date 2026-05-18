@@ -4,6 +4,8 @@ Resilience Copilot is a safety-first disaster relief triage assistant built with
 
 This project was built for **The Gemma 4 Good Hackathon**. The competition provides no official training dataset, so the work focuses on a reproducible scenario-validation workflow, a public live demo, and judge-facing evidence that explains how Gemma 4 is used safely.
 
+![Resilience Copilot demo preview](resilience_copilot_demo_preview.png)
+
 ## 30-Second Review
 
 | What to check | Summary |
@@ -94,6 +96,12 @@ Validation is scenario-based because the hackathon provides no official training
 - YouTube video: https://youtu.be/CmqCV8Ic9cY
 - Kaggle Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
 - Submitted Kaggle writeup: https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423
+
+## Scan Links
+
+| GitHub repository | Live demo |
+| --- | --- |
+| ![GitHub QR](resilience_copilot_github_qr.png) | ![Demo QR](resilience_copilot_demo_qr.png) |
 
 ## Gemma 4 Evidence
 
