@@ -17,6 +17,13 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 | Validation result | Local gate passes demo 2/2, holdout 2/2, stress 15/15, with `ready_to_submit=true`. |
 | Demo link | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
 
+## How to Review
+
+1. Open the public demo and run the default flood case or the heatwave sample.
+2. Check the first result viewport for risk level, playbook count, official routes, and validation status.
+3. Inspect `Transfer Brief`, `Audit Trace`, `Source Verification Ledger`, and `Case Export` to see how the safety sidecar makes the response auditable.
+4. Download `resilience_copilot_submission_bundle_EXP029.zip` for the final writeup, validation reports, evidence screenshots, reproducibility scripts, and Gemma 4 runtime evidence.
+
 ## Project Background
 
 - Competition: https://www.kaggle.com/competitions/gemma-4-good-hackathon
