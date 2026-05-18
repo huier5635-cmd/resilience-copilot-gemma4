@@ -72,6 +72,34 @@ h1 {
   line-height: 1.4;
 }
 
+.review-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 16px;
+}
+
+.review-strip span {
+  display: block;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 9px 10px;
+  background: #fbfcfa;
+  color: #294247;
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.review-strip strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--accent);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
 h2 {
   margin: 0 0 10px;
   font-size: 15px;
@@ -370,7 +398,8 @@ pre {
 @media (max-width: 900px) {
   .shell,
   .grid,
-  .decision-brief {
+  .decision-brief,
+  .review-strip {
     grid-template-columns: 1fr;
   }
 

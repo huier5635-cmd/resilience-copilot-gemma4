@@ -144,7 +144,7 @@ Current final gate:
 - stress cases: 15/15 locally; the latest submitted EXP-029 Kaggle writeup documents 15/15
 - writeup readiness: checked locally against word count, links, and evidence terms
 - judging packet: checked locally against rubric map, links, assets, and validation results
-- public evidence surface: GitHub Pages verified on 2026-05-17 with `Transfer Brief`, `Source Verification Ledger`, `Responder packet`, `Household message`, `Audit trace`, and `Structured case export`
+- public evidence surface: GitHub Pages verified on 2026-05-18 with the reviewer strip, `Transfer Brief`, `Source Verification Ledger`, `Responder packet`, `Household message`, `Audit trace`, and `Structured case export`
 - Kaggle checklist: 7/7
 - final Kaggle submission: refreshed to EXP-029 on 2026-05-17
 
