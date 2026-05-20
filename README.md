@@ -13,6 +13,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 | Project background | Disaster-relief volunteers often receive messy notes, rumors, incomplete resource information, language-access needs, and high-risk medical-adjacent concerns. |
 | Method framework | A deterministic sidecar detects risk signals, selects playbook constraints, asks Gemma 4 to produce responder-facing language, then checks the response contract before export. |
 | System architecture | `Case Note -> Risk Signal Detector -> Playbook Matcher -> Gemma 4 Generation -> Safety Contract Checker -> 16-section Response -> JSON Export + Audit Trace + Transfer Brief` |
+| Agent scope | Current system: safety-bounded workflow agent（有安全边界的流程型智能体）. Future roadmap: tool calling（工具调用）, skill library（技能库）, and environment feedback（环境反馈） inspired by Voyager-style learning loop（Voyager 式学习循环）. |
 | Safety mechanism | The assistant does not replace emergency services, does not diagnose, does not invent shelter capacity or transport availability, and keeps human review explicit. |
 | Validation result | Local gate passes demo 2/2, holdout 2/2, stress 15/15, with `ready_to_submit=true`. |
 | Demo link | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
@@ -23,6 +24,12 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 2. Check the first result viewport for risk level, playbook count, official routes, and validation status.
 3. Inspect `Transfer Brief`, `Audit Trace`, `Source Verification Ledger`, and `Case Export` to see how the safety sidecar makes the response auditable.
 4. Download `resilience_copilot_submission_bundle_EXP029.zip` for the final writeup, validation reports, evidence screenshots, reproducibility scripts, and Gemma 4 runtime evidence.
+
+## Agent Positioning and Roadmap
+
+Resilience Copilot is best described as a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not a **fully autonomous agent（完全自主智能体）**. The current version makes bounded triage decisions inside a fixed safety contract: risk level, playbook selection, official-resource checks, blocked-claim categories, clarifying questions, Transfer Brief, Audit Trace, and structured export. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
+
+The next step is a **Voyager-style learning loop（Voyager 式学习循环）** under human review: add **tool calling（工具调用）** for approved official-resource checks, a **skill library（技能库）** for reusable disaster-response routines, and an **environment feedback loop（环境反馈循环）** that records validation failures and improves future strategies without crossing the existing safety boundary.
 
 ## Project Background
 
@@ -134,7 +141,7 @@ The final judge-facing bundle is a compact review packet, not a full working arc
 ## Public Experiment Trace
 
 - **EXP-029 final version:** submitted to Kaggle on 2026-05-17 with the 16-section response, Transfer Brief, 15/15 stress validation, public GitHub Pages demo, and EXP-029 evidence bundle.
-- **Public review packet:** `resilience_copilot_submission_bundle_EXP029.zip`, 47 judge-facing files, no internal study logs or local coaching notes.
+- **Public review packet:** `resilience_copilot_submission_bundle_EXP029.zip`, compact judge-facing files only, no internal study logs or local coaching notes.
 - **Evidence chain:** Kaggle writeup, public demo, public repository, video, Gemma 4 evidence notebook, scenario-validation reports, and judging evidence matrix.
 
 ## Reproduce Local Validation
