@@ -13,7 +13,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 | Project background | Disaster-relief volunteers often receive messy notes, rumors, incomplete resource information, language-access needs, and high-risk medical-adjacent concerns. |
 | Method framework | A deterministic sidecar detects risk signals, selects playbook constraints, asks Gemma 4 to produce responder-facing language, then checks the response contract before export. |
 | System architecture | `Case Note -> Risk Signal Detector -> Playbook Matcher -> Gemma 4 Generation -> Safety Contract Checker -> 16-section Response -> JSON Export + Audit Trace + Transfer Brief` |
-| Agent scope | Current system: safety-bounded learning agent（有安全边界的学习型智能体） prototype: deterministic workflow plus offline experience ledger（经验账本）, validation feedback memory（验证反馈记忆）, strategy reflection（策略反思）, skill library（技能库）, and tool calling sandbox（工具调用沙盒）. |
+| Agent scope | Current system: safety-bounded learning agent（有安全边界的学习型智能体） prototype: deterministic workflow plus offline experience ledger（经验账本）, validation feedback memory（验证反馈记忆）, long-term memory system（长期记忆系统）, strategy reflection（策略反思）, skill library（技能库）, and tool calling sandbox（工具调用沙盒）. |
 | Safety mechanism | The assistant does not replace emergency services, does not diagnose, does not invent shelter capacity or transport availability, and keeps human review explicit. |
 | Validation result | Local gate passes demo 2/2, holdout 2/2, stress 15/15, with `ready_to_submit=true`. |
 | Demo link | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
@@ -29,7 +29,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 
 The EXP-029 triage runtime is a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not an **unrestricted autonomous agent（无约束自主智能体）** or **fully autonomous agent（完全自主智能体）**. The repository now extends that stable runtime with an offline learning sidecar, so the project can accumulate validation experience and propose next-round strategy ideas without letting the system act autonomously in a disaster setting. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
 
-The repository now includes an offline **safety-bounded learning agent（有安全边界的学习型智能体）** prototype built from local validation feedback（本地验证反馈）. The learning sidecar records scenario outcomes in an **experience ledger（经验账本）**, summarizes pass/fail patterns in **validation feedback memory（验证反馈记忆）**, writes **strategy reflection（策略反思）** notes, refreshes a human-reviewed **skill library（技能库）**, and demonstrates a no-network **tool calling sandbox（工具调用沙盒）** for future official-resource checks.
+The repository now includes an offline **safety-bounded learning agent（有安全边界的学习型智能体）** prototype built from local validation feedback（本地验证反馈）. The learning sidecar records scenario outcomes in an **experience ledger（经验账本）**, summarizes pass/fail patterns in **validation feedback memory（验证反馈记忆）**, builds a bounded **long-term memory system（长期记忆系统）**, writes **strategy reflection（策略反思）** notes, refreshes a human-reviewed **skill library（技能库）**, and demonstrates a no-network **tool calling sandbox（工具调用沙盒）** for future official-resource checks.
 
 ```text
 Case Note
@@ -41,6 +41,8 @@ Playbook Matcher
 Gemma 4 Generation
   ->
 Safety Contract Checker
+  ->
+Bounded Memory System
   ->
 Experience Ledger
   ->
@@ -55,14 +57,20 @@ Next-Round Policy Suggestions
 | --- | --- | --- |
 | V1 | Deterministic workflow（确定性流程）: risk signals, playbook matching, 16-section response, audit export. | Completed in EXP-029; human review stays explicit. |
 | V1.5 | Validation feedback memory（验证反馈记忆）: record demo/holdout/stress outcomes, failure types, and improvement notes. | Implemented offline from local validation feedback; no live external action. |
-| V2 | Strategy reflection（策略反思）: identify repeated failure patterns and propose playbook or prompt-policy updates. | Implemented as review-only notes; no automatic policy changes. |
-| V3 | Tool calling sandbox（工具调用沙盒）: simulate approved official-resource checks through a whitelist. | Implemented offline only; no emergency calls, shelter booking, diagnosis, or capacity promises. |
-| V4 | Voyager-style learning loop（Voyager 式学习循环）: combine tool use, skill reuse, and environment feedback. | Implemented as a bounded loop summary; safety sidecar（安全侧车） and human review（人工审核） remain mandatory. |
+| V2 | Long-term memory system（长期记忆系统）: episodic memory（情景记忆）, semantic memory（语义记忆）, procedural memory（程序记忆）, reflective memory（反思记忆）, retrieval（检索）, consolidation（巩固）, and protected safety invariants（受保护安全不变量）. | Implemented offline; memory can suggest policy ideas but cannot update runtime behavior automatically. |
+| V3 | Strategy reflection（策略反思）: identify repeated failure patterns and propose playbook or prompt-policy updates. | Implemented as review-only notes; no automatic policy changes. |
+| V4 | Tool calling sandbox（工具调用沙盒）: simulate approved official-resource checks through a whitelist. | Implemented offline only; no emergency calls, shelter booking, diagnosis, or capacity promises. |
+| V5 | Voyager-style learning loop（Voyager 式学习循环）: combine tool use, skill reuse, memory retrieval, and environment feedback. | Implemented as a bounded loop summary; safety sidecar（安全侧车） and human review（人工审核） remain mandatory. |
 
 Implemented artifacts:
 
 - `outputs/local_validation/experience_ledger.jsonl`: case-level experience records from local validation.
 - `outputs/local_validation/validation_feedback_memory.json`: aggregate memory of pass/fail results, recurrent signals, playbook usage, skill usage, and safety invariants.
+- `outputs/local_validation/agent_memory_store.json`: long-term memory store with episodic, semantic, procedural, and reflective memory layers.
+- `outputs/local_validation/memory_retrieval_index.json`: deterministic retrieval index using relevance, importance, confidence, and recency.
+- `outputs/local_validation/memory_retrieval_demo.json`: three judge-facing retrieval demos for oxygen outage, heatwave risk, and shelter rumor cases.
+- `outputs/local_validation/memory_consolidation_report.md`: consolidation, decay, quarantine, and protected-invariant policy.
+- `outputs/local_validation/memory_safety_policy.json`: explicit guardrails for memory promotion and runtime policy changes.
 - `outputs/local_validation/strategy_reflection.md`: review-only strategy notes generated from validation feedback.
 - `knowledge_base/skill_library.json`: reusable disaster-response skills with validation support and blocked actions.
 - `outputs/local_validation/tool_calling_sandbox_demo.json`: no-network whitelist simulation for future official-resource tool calls.
@@ -72,9 +80,12 @@ Run the learning sidecar directly:
 
 ```powershell
 python scripts\agentic_learning_loop.py
+python scripts\agent_memory_system.py
 ```
 
 This makes the project more agentic（更具智能体能力） while staying auditable: experience accumulates, strategies iterate, and reusable skills emerge, but high-risk disaster-relief decisions remain bounded, traceable, and responder-reviewed.
+
+The memory design is inspired by recent agent research patterns: memory stream and reflection from [Generative Agents](https://arxiv.org/abs/2304.03442), tiered memory from [MemGPT](https://arxiv.org/abs/2310.08560), feedback-to-reflection from [Reflexion](https://arxiv.org/abs/2303.11366), and reusable skill memory from [Voyager](https://arxiv.org/abs/2305.16291). In this project those ideas are constrained to offline validation artifacts and human-reviewed policy promotion.
 
 ## Project Background
 
@@ -136,6 +147,7 @@ Validation is scenario-based because the hackathon provides no official training
 | Demo cases | 2/2 |
 | Holdout cases | 2/2 |
 | Stress cases | 15/15 |
+| Memory system | ready |
 | Writeup readiness | ready |
 | Judging packet | ready |
 | Final local gate | `ready_to_submit=true` |
