@@ -13,7 +13,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 | Project background | Disaster-relief volunteers often receive messy notes, rumors, incomplete resource information, language-access needs, and high-risk medical-adjacent concerns. |
 | Method framework | A deterministic sidecar detects risk signals, selects playbook constraints, asks Gemma 4 to produce responder-facing language, then checks the response contract before export. |
 | System architecture | `Case Note -> Risk Signal Detector -> Playbook Matcher -> Gemma 4 Generation -> Safety Contract Checker -> 16-section Response -> JSON Export + Audit Trace + Transfer Brief` |
-| Agent scope | Current system: safety-bounded workflow agent（有安全边界的流程型智能体）. Future roadmap: tool calling（工具调用）, skill library（技能库）, and environment feedback（环境反馈） inspired by Voyager-style learning loop（Voyager 式学习循环）. |
+| Agent scope | Current system: safety-bounded workflow agent（有安全边界的流程型智能体）. Roadmap: safety-bounded learning agent（有安全边界的学习型智能体） using experience ledger（经验账本）, skill library（技能库）, and environment feedback loop（环境反馈循环）. |
 | Safety mechanism | The assistant does not replace emergency services, does not diagnose, does not invent shelter capacity or transport availability, and keeps human review explicit. |
 | Validation result | Local gate passes demo 2/2, holdout 2/2, stress 15/15, with `ready_to_submit=true`. |
 | Demo link | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
@@ -25,11 +25,41 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 3. Inspect `Transfer Brief`, `Audit Trace`, `Source Verification Ledger`, and `Case Export` to see how the safety sidecar makes the response auditable.
 4. Download `resilience_copilot_submission_bundle_EXP029.zip` for the final writeup, validation reports, evidence screenshots, reproducibility scripts, and Gemma 4 runtime evidence.
 
-## Agent Positioning and Roadmap
+## Agentic Evolution Roadmap（智能体演进路线图）
 
-Resilience Copilot is best described as a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not a **fully autonomous agent（完全自主智能体）**. The current version makes bounded triage decisions inside a fixed safety contract: risk level, playbook selection, official-resource checks, blocked-claim categories, clarifying questions, Transfer Brief, Audit Trace, and structured export. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
+Resilience Copilot is best described as a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not an **unrestricted autonomous agent（无约束自主智能体）** or **fully autonomous agent（完全自主智能体）**. The current version makes bounded triage decisions inside a fixed safety contract: risk level, playbook selection, official-resource checks, blocked-claim categories, clarifying questions, Transfer Brief, Audit Trace, and structured export. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
 
-The next step is a **Voyager-style learning loop（Voyager 式学习循环）** under human review: add **tool calling（工具调用）** for approved official-resource checks, a **skill library（技能库）** for reusable disaster-response routines, and an **environment feedback loop（环境反馈循环）** that records validation failures and improves future strategies without crossing the existing safety boundary.
+The next step is a **safety-bounded learning agent（有安全边界的学习型智能体）** built from local validation feedback（本地验证反馈）. The system should keep an **experience ledger（经验账本）** of scenario outcomes, failed checks, triggered signals, and reviewer-approved improvement notes; turn repeated successful routines into a **skill library（技能库）**; and use an **environment feedback loop（环境反馈循环）** to propose next-round strategy updates without crossing the safety boundary.
+
+```text
+Case Note
+  ->
+Risk Signal Detector
+  ->
+Playbook Matcher
+  ->
+Gemma 4 Generation
+  ->
+Safety Contract Checker
+  ->
+Experience Ledger
+  ->
+Strategy Reflection
+  ->
+Human-Reviewed Skill Library
+  ->
+Next-Round Policy Suggestions
+```
+
+| Stage | Capability | Safety boundary |
+| --- | --- | --- |
+| V1 | Deterministic workflow（确定性流程）: risk signals, playbook matching, 16-section response, audit export. | Completed in EXP-029; human review stays explicit. |
+| V1.5 | Validation feedback memory（验证反馈记忆）: record demo/holdout/stress outcomes, failure types, and improvement notes. | Uses local validation feedback only; no live external action. |
+| V2 | Strategy reflection（策略反思）: identify repeated failure patterns and propose playbook or prompt-policy updates. | Suggestions are review-only until a human approves them. |
+| V3 | Tool calling sandbox（工具调用沙盒）: allow approved official-resource checks through a whitelist. | No emergency calls, shelter booking, diagnosis, or capacity promises. |
+| V4 | Voyager-style learning loop（Voyager 式学习循环）: combine tool use, skill reuse, and environment feedback. | Safety sidecar（安全侧车） and human review（人工审核） remain mandatory. |
+
+This roadmap makes the project more agentic（更具智能体能力） while staying auditable: experience can accumulate, strategies can iterate, and reusable skills can emerge, but high-risk disaster-relief decisions remain bounded, traceable, and responder-reviewed.
 
 ## Project Background
 
