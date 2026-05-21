@@ -27,7 +27,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 
 ## Agentic Learning Sidecar（智能体学习侧车）
 
-Resilience Copilot is best described as a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not an **unrestricted autonomous agent（无约束自主智能体）** or **fully autonomous agent（完全自主智能体）**. The current version makes bounded triage decisions inside a fixed safety contract: risk level, playbook selection, official-resource checks, blocked-claim categories, clarifying questions, Transfer Brief, Audit Trace, and structured export. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
+The EXP-029 triage runtime is a **safety-bounded workflow agent（有安全边界的流程型智能体）**, not an **unrestricted autonomous agent（无约束自主智能体）** or **fully autonomous agent（完全自主智能体）**. The repository now extends that stable runtime with an offline learning sidecar, so the project can accumulate validation experience and propose next-round strategy ideas without letting the system act autonomously in a disaster setting. It does not call emergency services, book shelters, diagnose conditions, promise live capacity, or claim real-time transport availability.
 
 The repository now includes an offline **safety-bounded learning agent（有安全边界的学习型智能体）** prototype built from local validation feedback（本地验证反馈）. The learning sidecar records scenario outcomes in an **experience ledger（经验账本）**, summarizes pass/fail patterns in **validation feedback memory（验证反馈记忆）**, writes **strategy reflection（策略反思）** notes, refreshes a human-reviewed **skill library（技能库）**, and demonstrates a no-network **tool calling sandbox（工具调用沙盒）** for future official-resource checks.
 
