@@ -1,0 +1,25 @@
+Slide 1: Resilience Copilot is a safety-first disaster relief triage assistant. This command center version shows the product as a live response workflow, not only a code project.
+
+Slide 2: In crisis response, a call taker may hear oxygen, outage, rumor, language, transport, and medication risk all in the same note. The system must preserve uncertainty.
+
+Slide 3: The agent has bounded autonomy: it plans, coordinates, retrieves memory, selects skills, and reflects. It is not an unrestricted autonomous emergency actor.
+
+Slide 4: Step one: an incoming call becomes a structured case note. The system highlights oxygen, power outage, shelter rumor, and transport barrier before answer generation.
+
+Slide 5: Step two: the system marks the case high risk, requires human review, quarantines the shelter rumor, and blocks unsupported claims.
+
+Slide 6: Step three: the memory system retrieves previous validation lessons and skills. This is the agentic layer that moves beyond a pure fixed workflow while staying reviewable.
+
+Slide 7: Step four: playbooks and sandboxed tools constrain the response. The system can choose an approved check pattern, but it cannot pretend to know real-time resource capacity.
+
+Slide 8: Step five: the final output includes the transfer brief and JSON audit export, not just prose. This is what makes the system inspectable.
+
+Slide 9: The public demo is designed so judges and interviewers can understand the project in thirty seconds, then inspect the response contract and audit evidence.
+
+Slide 10: The validation story is simple: demo two of two, holdout two of two, stress fifteen of fifteen, plus a Kaggle evidence notebook for Gemma 4 execution.
+
+Slide 11: This is the answer to the workflow question. The current project is a safety-bounded learning agent prototype, not a free autonomous system.
+
+Slide 12: The safety boundary is visible and enforced. This is especially important for disaster relief, where wrong certainty can harm people.
+
+Slide 13: The final packet points to the live demo and GitHub repo, with validation, evidence, and reproducibility ready for judges or interviewers.

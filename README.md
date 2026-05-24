@@ -4,6 +4,15 @@ Safety-first disaster relief triage assistant built with Gemma 4, deterministic 
 
 ![Resilience Copilot demo preview](resilience_copilot_demo_preview.png)
 
+## V4 Command Center Pitch
+
+The latest presentation asset is the **Rescue Command Center** version:
+
+- [V4 pitch deck](resilience_copilot_pitch_v4_command_center.pptx)
+- [V4 narration script](resilience_copilot_pitch_v4_narration_script.txt)
+
+![Resilience Copilot V4 command center preview](resilience_copilot_pitch_v4_video_frame.png)
+
 ## Read This Project
 
 - [Full English README](README_EN.md)
@@ -40,4 +49,4 @@ The final judge-facing bundle is:
 
 `resilience_copilot_submission_bundle_EXP029.zip`
 
-It contains the writeup, evidence matrix, validation reports, Gemma 4 runtime evidence, reproducibility scripts, static demo, pitch deck, memory artifacts, and graph-orchestration traces.
+It contains the writeup, evidence matrix, validation reports, Gemma 4 runtime evidence, reproducibility scripts, static demo, V4 command-center pitch deck, memory artifacts, and graph-orchestration traces.

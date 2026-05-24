@@ -2,7 +2,7 @@
 
 语言版本：[README.md](README.md) | [README_EN.md](README_EN.md)
 
-Resilience Copilot 是一个面向灾害救援场景的安全优先分诊助手，基于 Gemma 4、确定性安全侧车、可审计行动手册、官方资源核验、ICS 风格交接简报、结构化 JSON 导出和本地场景验证，帮助志愿者把混乱的危机记录转化为更安全、可复核、可交接的下一步行动建议。
+Resilience Copilot 是一个面向灾害救援场景的安全优先分诊助手，基于 Gemma 4、确定性安全侧车、可审计行动手册、官方资源核验、ICS 风格 Transfer Brief、结构化 JSON 导出和本地场景验证，帮助志愿者把混乱的危机记录转化为更安全、可复核、可交接的下一步行动建议。
 
 项目用于 **The Gemma 4 Good Hackathon**。比赛没有提供官方训练数据，因此本项目重点放在可复现场景验证、公开在线 Demo、Gemma 4 使用证据和评委可核查的工程闭环上。
 
@@ -16,9 +16,18 @@ Resilience Copilot 是一个面向灾害救援场景的安全优先分诊助手�
 | 方法框架 | 确定性安全侧车先识别风险信号和行动约束，再让 Gemma 4 生成面向救援人员的文本，最后执行安全契约检查。 |
 | 系统架构 | `Case Note -> Risk Signal Detector -> Playbook Matcher -> Gemma 4 Generation -> Safety Contract Checker -> 16-section Response -> JSON Export + Audit Trace + Transfer Brief` |
 | Agent 能力 | 当前是有安全边界的学习型智能体原型，包含 LangGraph 兼容图式编排、经验账本、验证反馈记忆、长期记忆系统、策略反思、技能库和工具调用沙盒。 |
-| 安全机制 | 不替代急救服务，不做诊断，不虚构避难所容量或交通可用性，关键决策保持人工复核。 |
+| 安全机制 | 不替代 emergency services，不诊断，不虚构避难所容量或交通可用性，关键决策保持人工复核。 |
 | 验证结果 | 本地门禁通过：demo 2/2、holdout 2/2、stress 15/15，`ready_to_submit=true`。 |
 | 在线 Demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
+
+## V4 救援指挥舱展示
+
+最新版展示资产是 **Rescue Command Center** 版 PPT：
+
+- [V4 pitch deck](resilience_copilot_pitch_v4_command_center.pptx)
+- [V4 narration script](resilience_copilot_pitch_v4_narration_script.txt)
+
+![Resilience Copilot V4 command center preview](resilience_copilot_pitch_v4_video_frame.png)
 
 ## 如何评审
 
@@ -29,7 +38,7 @@ Resilience Copilot 是一个面向灾害救援场景的安全优先分诊助手�
 
 ## 智能体学习侧车
 
-EXP-029 的救援分诊运行时是 **有安全边界的流程型智能体**，不是无约束自主智能体，也不是完全自主响应系统。项目在稳定运行时外增加了离线学习侧车，使系统能够从本地验证中积累经验并提出下一轮策略建议，但不会在真实灾害场景中自主行动。
+EXP-029 的救援分诊运行时是 **有安全边界的 workflow agent**，不是无约束 autonomous agent，也不是完全自主的应急行动系统。项目在稳定运行时外增加了离线学习侧车，使系统能够从本地验证中积累经验并提出下一轮策略建议，但不会在真实灾害场景中自主行动。
 
 学习侧车包含：
 
@@ -38,36 +47,8 @@ EXP-029 的救援分诊运行时是 **有安全边界的流程型智能体**，�
 - **bounded long-term memory system**：四层长期记忆，包括情景记忆、语义记忆、程序记忆和反思记忆。
 - **strategy reflection**：从验证反馈中生成只供人工审核的策略反思。
 - **skill library**：沉淀可复用救援策略，如谣言隔离、语言支持交接、热浪路径规划等。
-- **tool calling sandbox**：离线模拟官方资源查询，不联网、不产生现实副作用。
+- **tool calling sandbox**：离线模拟官方资源查询，不联网、不产生真实副作用。
 - **LangGraph-compatible graph orchestrator**：用规划器、协调器、专家节点、安全检查器和总结智能体组织执行流程。
-
-```text
-Case Note
-  ->
-Risk Signal Detector
-  ->
-Playbook Matcher
-  ->
-Gemma 4 Generation
-  ->
-Safety Contract Checker
-  ->
-Bounded Memory System
-  ->
-Graph Orchestrator
-  ->
-Experience Ledger
-  ->
-Strategy Reflection
-  ->
-Human-Reviewed Skill Library
-  ->
-Next-Round Policy Suggestions
-```
-
-## 图式编排
-
-项目参考多智能体协作框架，新增 9 节点图式执行链：
 
 ```text
 Planner
@@ -102,23 +83,15 @@ Summary Agent
 | procedural memory | 保存可复用技能，例如谣言隔离、语言支持交接、热浪路径规划。 |
 | reflective memory | 保存策略反思，供下一轮人工审核。 |
 
-当前记忆系统结果：
-
-- 53 条 memories。
-- 19 条 episodic memories。
-- 20 条 semantic memories。
-- 7 条 procedural memories。
-- 7 条 reflective memories。
-- 3 个 retrieval demos。
-- 6 条 protected safety invariants。
+当前结果：53 条 memories、19 条 episodic memories、20 条 semantic memories、7 条 procedural memories、7 条 reflective memories、3 个 retrieval demos、6 条 protected safety invariants。
 
 ## 安全机制
 
 - 高风险案例必须进入人工复核。
-- 不替代急救服务。
+- 不替代 emergency services。
 - 不诊断，不给治疗建议。
 - 不虚构避难所容量、道路安全、交通可用性或冷却中心容量。
-- 社交媒体和口头传言进入 rumor quarantine，必须等官方渠道确认。
+- 社交媒体和口头传言进入 rumor quarantine，必须等待官方渠道确认。
 - 记忆系统不能自动修改高风险策略。
 - 工具沙盒不能自动呼叫急救、预订避难所或执行真实外部操作。
 

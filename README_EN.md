@@ -269,8 +269,10 @@ Use the GitHub Pages link as the public demo in the Kaggle writeup. Legacy tunne
 
 ## Assets
 
-- Video source asset: `outputs/submission_assets/resilience_copilot_caption_video_20260513.webm`
-- Pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v2.pptx`
+- Public video URL: `https://youtu.be/CmqCV8Ic9cY`
+- V4 command-center pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v4_command_center.pptx`
+- V4 pitch preview: `outputs/submission_assets/resilience_copilot_pitch_v4_video_frame.png`
+- V4 narration script: `outputs/submission_assets/resilience_copilot_pitch_v4_narration_script.txt`
 - Static deployment package: `outputs/submission_assets/public_demo_static.zip`
 - Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
 - Latest submitted evidence bundle: `resilience_copilot_submission_bundle_EXP029.zip`
@@ -278,7 +280,9 @@ Use the GitHub Pages link as the public demo in the Kaggle writeup. Legacy tunne
 
 Root-level public repo assets:
 
-- `resilience_copilot_pitch_v2.pptx`
+- `resilience_copilot_pitch_v4_command_center.pptx`
+- `resilience_copilot_pitch_v4_video_frame.png`
+- `resilience_copilot_pitch_v4_narration_script.txt`
 - `resilience_copilot_submission_bundle.zip`
 
 Refresh the submission bundle after changing project assets:
