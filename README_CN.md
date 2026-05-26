@@ -1,6 +1,6 @@
 # Resilience Copilot 中文说明
 
-语言版本：[README.md](README.md) | [README_EN.md](README_EN.md)
+语言版本：[README.md](README.md)
 
 Resilience Copilot 是一个面向高风险人工复核场景的安全边界智能体模板。当前旗舰 Demo 是灾害救援分诊助手：它把志愿者收到的混乱求助记录，转成更安全、可审计、可交接的下一步行动建议。
 
@@ -20,7 +20,6 @@ Resilience Copilot 是一个面向高风险人工复核场景的安全边界智�
 | 内容 | 链接 |
 | --- | --- |
 | 在线 Demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
-| 英文完整说明 | [README_EN.md](README_EN.md) |
 | Kaggle Writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 证据 Notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
 
