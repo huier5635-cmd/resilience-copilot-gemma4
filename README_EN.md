@@ -25,7 +25,7 @@ This project was built for **The Gemma 4 Good Hackathon**. The competition provi
 1. Open the public demo and run the default flood case or the heatwave sample.
 2. Check the first result viewport for risk level, playbook count, official routes, and validation status.
 3. Inspect `Transfer Brief`, `Audit Trace`, `Source Verification Ledger`, and `Case Export` to see how the safety sidecar makes the response auditable.
-4. Download `resilience_copilot_submission_bundle_EXP029.zip` for the final writeup, validation reports, evidence screenshots, reproducibility scripts, and Gemma 4 runtime evidence.
+4. Use the Kaggle writeup and this repository for final evidence; large competition attachments are not kept in the GitHub root.
 
 ## Agentic Learning Sidecar
 
@@ -187,12 +187,6 @@ Validation is scenario-based because the hackathon provides no official training
 - Kaggle Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
 - Submitted Kaggle writeup: https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423
 
-## Scan Links
-
-| GitHub repository | Live demo |
-| --- | --- |
-| ![GitHub QR](resilience_copilot_github_qr.png) | ![Demo QR](resilience_copilot_demo_qr.png) |
-
 ## Gemma 4 Evidence
 
 Gemma 4 was executed in a Kaggle Notebook using the official model resource:
@@ -217,7 +211,7 @@ The final judge-facing bundle is a compact review packet, not a full working arc
 ## Public Experiment Trace
 
 - **EXP-029 final version:** submitted to Kaggle on 2026-05-17 with the 16-section response, Transfer Brief, 15/15 stress validation, public GitHub Pages demo, and EXP-029 evidence bundle.
-- **Public review packet:** `resilience_copilot_submission_bundle_EXP029.zip`, compact judge-facing files only, no internal study logs or local coaching notes.
+- **Public review packet:** tracked through the Kaggle writeup and clean GitHub source; large attachment zips are not kept in the repository root.
 - **Evidence chain:** Kaggle writeup, public demo, public repository, video, Gemma 4 evidence notebook, scenario-validation reports, and judging evidence matrix.
 
 ## Reproduce Local Validation
@@ -270,20 +264,11 @@ Use the GitHub Pages link as the public demo in the Kaggle writeup. Legacy tunne
 ## Assets
 
 - Public video URL: `https://youtu.be/CmqCV8Ic9cY`
-- V4 command-center pitch deck: `outputs/submission_assets/resilience_copilot_pitch_v4_command_center.pptx`
-- V4 pitch preview: `outputs/submission_assets/resilience_copilot_pitch_v4_video_frame.png`
-- V4 narration script: `outputs/submission_assets/resilience_copilot_pitch_v4_narration_script.txt`
-- Static deployment package: `outputs/submission_assets/public_demo_static.zip`
-- Submission bundle: `outputs/submission_assets/resilience_copilot_submission_bundle.zip`
-- Latest submitted evidence bundle: `resilience_copilot_submission_bundle_EXP029.zip`
+- Large pitch and evidence attachments are referenced from the Kaggle writeup and kept out of the GitHub root so the repository remains easy to browse.
 - Evidence report: `outputs/local_validation/evidence_report.md`
 
 Root-level public repo assets:
 
-- `resilience_copilot_pitch_v4_command_center.pptx`
-- `resilience_copilot_pitch_v4_video_frame.png`
-- `resilience_copilot_pitch_v4_narration_script.txt`
-- `resilience_copilot_submission_bundle.zip`
 
 Refresh the submission bundle after changing project assets:
 
@@ -291,4 +276,4 @@ Refresh the submission bundle after changing project assets:
 python scripts\build_submission_bundle.py
 ```
 
-EXP-029 submitted version: the demo includes `Transfer Brief`, `Source Verification Ledger`, `Human Review Reason`, `Copy JSON`, `transfer_brief`, `source_verification`, and `ics-style-transfer-brief`. The local stress gate is 15/15, and the project was submitted to Kaggle on 2026-05-17 with `resilience_copilot_submission_bundle_EXP029.zip`. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
+EXP-029 submitted version: the demo includes `Transfer Brief`, `Source Verification Ledger`, `Human Review Reason`, `Copy JSON`, `transfer_brief`, `source_verification`, and `ics-style-transfer-brief`. The local stress gate is 15/15, and the project was submitted to Kaggle on 2026-05-17 with the EXP-029 evidence bundle. Literature basis: FEMA ICS 201 incident briefing structure for situation, actions, resources, communications, and prepared-by handoff.
