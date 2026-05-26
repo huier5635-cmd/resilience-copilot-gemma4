@@ -8,14 +8,20 @@
   </head>
   <body>
     <main class="shell">
-      <section class="case-pane">
+      <section class="case-pane" id="demo">
         <header class="topbar">
           <div>
             <p class="eyebrow">Gemma 4 Good Hackathon</p>
             <h1>Resilience Copilot</h1>
-            <p class="deck">Safety-first disaster relief triage with Gemma 4 generation and a deterministic safety sidecar.</p>
+            <p class="deck">A safety-bounded agent template for high-risk human-review workflows, shown through a disaster-relief triage demo.</p>
+            <nav class="project-links" aria-label="Project links">
+              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4">Code</a>
+              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/blob/main/docs/architecture.md">Architecture</a>
+              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/releases/tag/v0.1.0">Release</a>
+              <a href="https://www.kaggle.com/code/zhenhuier/notebook5022dfd167">Gemma 4 Evidence</a>
+            </nav>
           </div>
-          <div class="status">static safety demo</div>
+          <div class="status">v0.1.0 public template</div>
         </header>
 
         <div class="review-strip" aria-label="Project review summary">
@@ -23,6 +29,27 @@
           <span><strong>Method</strong> Gemma 4 plus deterministic safety sidecar</span>
           <span><strong>Safety</strong> no diagnosis, no invented capacity, human review</span>
           <span><strong>Validation</strong> demo 2/2, holdout 2/2, stress 15/15</span>
+        </div>
+
+        <div class="teaser-board" aria-label="System overview">
+          <div class="flow-line">
+            <span>Case note</span>
+            <span>Risk signals</span>
+            <span>Gemma 4 response</span>
+            <span>Safety check</span>
+            <span>Transfer brief</span>
+          </div>
+          <div class="teaser-copy">
+            <strong>Safety-bounded learning loop</strong>
+            <p>Validation feedback builds experience, memory, strategy reflection, and reusable skills, but policy changes stay human-reviewed.</p>
+          </div>
+        </div>
+
+        <div class="project-metrics" aria-label="Validation and safety metrics">
+          <span><strong>2/2</strong> demo</span>
+          <span><strong>2/2</strong> holdout</span>
+          <span><strong>15/15</strong> stress</span>
+          <span><strong>0</strong> invented capacity</span>
         </div>
 
         <div class="sample-row">
@@ -58,7 +85,7 @@
         </div>
       </section>
 
-      <section class="result-pane">
+      <section class="result-pane" id="results">
         <div class="risk-strip">
           <span class="risk" id="risk">Risk level</span>
           <span class="timestamp" id="timestamp">waiting</span>
