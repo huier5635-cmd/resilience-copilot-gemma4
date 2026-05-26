@@ -23,6 +23,7 @@ Resilience Copilot 是一个面向高风险人工复核场景的安全边界智�
 | 架构说明 | [docs/architecture.md](docs/architecture.md) |
 | 示例案例 | [docs/examples.md](docs/examples.md) |
 | 复用指南 | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
+| 版本说明 | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
 | Kaggle Writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 证据 Notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
 
@@ -86,6 +87,7 @@ python scripts\run_local_validation.py
 - `docs/architecture.md` 解释系统架构和安全边界。
 - `docs/examples.md` 展示三类典型案例。
 - `docs/adaptation_guide.md` 说明如何迁移到其他高风险人工复核场景。
+- `CHANGELOG.md` 和 `SECURITY.md` 说明版本变化和安全问题反馈方式。
 - 大型比赛附件、私有学习记录和旧草稿不放在 GitHub 根目录。
 
 ## 后续路线
