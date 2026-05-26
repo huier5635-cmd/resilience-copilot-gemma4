@@ -4,7 +4,7 @@
 
 Resilience Copilot 是一个面向高风险人工复核场景的安全边界智能体模板。当前旗舰 Demo 是灾害救援分诊助手：它把志愿者收到的混乱求助记录，转成更安全、可审计、可交接的下一步行动建议。
 
-项目使用 Gemma 4 生成面向救援人员的自然语言，同时用确定性安全侧车执行风险识别、行动手册约束、官方资源核验、16 段响应契约、Transfer Brief、Audit Trace 和结构化 JSON 导出。
+项目使用 Gemma 4 生成面向救援人员的自然语言响应，同时用确定性安全侧车执行风险识别、行动手册约束、官方资源核验、16 段响应契约、Transfer Brief、Audit Trace 和结构化 JSON 导出。
 
 ![Resilience Copilot demo preview](resilience_copilot_demo_preview.png)
 
@@ -12,7 +12,7 @@ Resilience Copilot 是一个面向高风险人工复核场景的安全边界智�
 
 - 它不是单纯聊天机器人，而是一个可复用的安全智能体工程模板。
 - 它把 LLM 生成、确定性约束、本地验证、审计轨迹和人工复核放在同一条闭环里。
-- 它已经有离线智能体能力：经验账本、验证反馈记忆、长期记忆、策略反思、技能库、工具调用沙盒和图式编排。
+- 它已经具备离线智能体能力：经验账本、验证反馈记忆、长期记忆、策略反思、技能库、工具调用沙盒和图式编排。
 - 它适合迁移到校园安全、养老热线、政务工单、公益救助、保险理赔初筛和合规客服等场景。
 
 ## 快速查看
@@ -20,6 +20,9 @@ Resilience Copilot 是一个面向高风险人工复核场景的安全边界智�
 | 内容 | 链接 |
 | --- | --- |
 | 在线 Demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
+| 架构说明 | [docs/architecture.md](docs/architecture.md) |
+| 示例案例 | [docs/examples.md](docs/examples.md) |
+| 复用指南 | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
 | Kaggle Writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 证据 Notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
 
@@ -75,15 +78,15 @@ Validation Feedback
 python scripts\run_local_validation.py
 ```
 
-## 展示资产
+## 如何复用
 
-V4 Rescue Command Center PPT 把项目讲成一个救援指挥舱故事：
+这个项目的公开仓库现在按“可复用模板”来整理：
 
-1. 志愿者接到求助电话。
-2. 系统识别风险信号。
-3. 记忆系统和技能库检索相关经验。
-4. 行动手册和工具沙盒提供约束。
-5. 输出 Transfer Brief、Audit Trace 和 JSON Export。
+- 根目录负责展示项目、运行静态 Demo、说明验证结果。
+- `docs/architecture.md` 解释系统架构和安全边界。
+- `docs/examples.md` 展示三类典型案例。
+- `docs/adaptation_guide.md` 说明如何迁移到其他高风险人工复核场景。
+- 大型比赛附件、私有学习记录和旧草稿不放在 GitHub 根目录。
 
 ## 后续路线
 
