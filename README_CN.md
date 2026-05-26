@@ -21,11 +21,8 @@ Resilience Copilot 是一个面向高风险人工复核场景的安全边界智�
 | --- | --- |
 | 在线 Demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
 | 英文完整说明 | [README_EN.md](README_EN.md) |
-| V4 展示 PPT | [resilience_copilot_pitch_v4_command_center.pptx](resilience_copilot_pitch_v4_command_center.pptx) |
-| V4 讲稿 | [resilience_copilot_pitch_v4_narration_script.txt](resilience_copilot_pitch_v4_narration_script.txt) |
 | Kaggle Writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 证据 Notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
-| 最终证据包 | [resilience_copilot_submission_bundle_EXP029.zip](resilience_copilot_submission_bundle_EXP029.zip) |
 
 ## 30 秒架构
 
@@ -88,8 +85,6 @@ V4 Rescue Command Center PPT 把项目讲成一个救援指挥舱故事：
 3. 记忆系统和技能库检索相关经验。
 4. 行动手册和工具沙盒提供约束。
 5. 输出 Transfer Brief、Audit Trace 和 JSON Export。
-
-![Resilience Copilot V4 command center preview](resilience_copilot_pitch_v4_video_frame.png)
 
 ## 后续路线
 
