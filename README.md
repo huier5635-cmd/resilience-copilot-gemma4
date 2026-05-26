@@ -2,7 +2,7 @@
 
 **Safety-bounded agent for disaster-relief triage, built with Gemma 4.**
 
-[![Demo](https://img.shields.io/badge/demo-GitHub%20Pages-1f6feb)](https://huier5635-cmd.github.io/resilience-copilot-gemma4/)
+[![Demo](https://img.shields.io/badge/demo-live-1f6feb)](https://huier5635-cmd.github.io/resilience-copilot-gemma4/)
 [![Validation](https://img.shields.io/badge/validation-2%2F2%20%7C%202%2F2%20%7C%2015%2F15-brightgreen)](#validation)
 [![Gemma 4](https://img.shields.io/badge/model-Gemma%204-7c3aed)](https://www.kaggle.com/code/zhenhuier/notebook5022dfd167)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
