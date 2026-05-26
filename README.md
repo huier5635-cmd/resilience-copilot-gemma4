@@ -23,7 +23,6 @@ Resilience Copilot turns messy disaster-relief notes into responder-reviewed nex
 | Resource | Link |
 | --- | --- |
 | Live demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
-| English docs | [README_EN.md](README_EN.md) |
 | Chinese docs | [README_CN.md](README_CN.md) |
 | Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 evidence notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
