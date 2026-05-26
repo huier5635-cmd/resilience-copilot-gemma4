@@ -25,13 +25,8 @@ This project is intentionally conservative because it targets high-risk human-re
 
 1. Open an issue describing the scenario or safety improvement.
 2. Keep the pull request narrow.
-3. Run local validation when code or scenarios change:
-
-```powershell
-python scripts\run_local_validation.py
-```
-
-4. Include the validation result in the pull request description.
+3. If you are working from the full source bundle, run the local validation gate before submitting a code or scenario change.
+4. Include the validation result, or explain why the change is documentation-only.
 
 ## Issue Labels To Use
 
