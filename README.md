@@ -16,7 +16,7 @@ Resilience Copilot turns messy disaster-relief notes into responder-reviewed nex
 - **Safety-first agent pattern**: LLM generation is wrapped by deterministic constraints, validation gates, audit traces, and human review.
 - **Agentic without overclaiming**: graph orchestration, bounded memory, experience ledger, strategy reflection, skill library, and tool sandbox are implemented offline and review-first.
 - **Reusable template**: the disaster-relief demo is the flagship example, but the architecture can be adapted to other high-risk workflows.
-- **Judge-ready evidence**: live demo, V4 pitch deck, Gemma 4 evidence notebook, local validation reports, and a reproducible final bundle are included.
+- **Judge-ready evidence**: live demo, Gemma 4 evidence notebook, Kaggle writeup, and validation summary are linked from the first screen.
 
 ## Quick Links
 
@@ -25,11 +25,8 @@ Resilience Copilot turns messy disaster-relief notes into responder-reviewed nex
 | Live demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
 | English docs | [README_EN.md](README_EN.md) |
 | Chinese docs | [README_CN.md](README_CN.md) |
-| V4 pitch deck | [resilience_copilot_pitch_v4_command_center.pptx](resilience_copilot_pitch_v4_command_center.pptx) |
-| V4 narration script | [resilience_copilot_pitch_v4_narration_script.txt](resilience_copilot_pitch_v4_narration_script.txt) |
 | Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 evidence notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
-| Final evidence bundle | [resilience_copilot_submission_bundle_EXP029.zip](resilience_copilot_submission_bundle_EXP029.zip) |
 
 ## 30-Second Architecture
 
@@ -67,7 +64,7 @@ The system is not an unrestricted autonomous agent. It does not call emergency s
 | Graph orchestration | ready |
 | Final local gate | `ready_to_submit=true` |
 
-Run the reproducibility gate from the final bundle:
+Run the reproducibility gate from a full source checkout or the Kaggle evidence bundle:
 
 ```powershell
 python scripts\run_local_validation.py
@@ -82,8 +79,6 @@ The V4 Rescue Command Center deck shows the user flow as a short incident handof
 3. Memory and skill retrieval.
 4. Playbook constraints and tool sandbox.
 5. Transfer Brief, Audit Trace, and JSON export.
-
-![Resilience Copilot V4 command center preview](resilience_copilot_pitch_v4_video_frame.png)
 
 ## Reuse Ideas
 
