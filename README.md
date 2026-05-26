@@ -26,6 +26,7 @@ Resilience Copilot turns messy disaster-relief notes into responder-reviewed nex
 | Architecture | [docs/architecture.md](docs/architecture.md) |
 | Examples | [docs/examples.md](docs/examples.md) |
 | Adaptation guide | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
+| Release notes | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
 | Chinese docs | [README_CN.md](README_CN.md) |
 | Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 evidence notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
@@ -100,6 +101,7 @@ This repository is intentionally small on the public surface:
 
 - root files explain the product and run the static demo;
 - `docs/` explains how to reuse the pattern;
+- `CHANGELOG.md` and `SECURITY.md` make maintenance and safety reporting explicit;
 - large competition attachments and private learning logs are kept out of the root;
 - the demo has no hidden online dependency.
 
