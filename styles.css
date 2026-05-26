@@ -538,8 +538,8 @@ pre {
 
   .case-pane,
   .result-pane {
-    width: calc(100vw - 24px);
-    max-width: calc(100vw - 24px);
+    width: 100%;
+    max-width: 100%;
     padding: 14px;
   }
 
@@ -583,7 +583,7 @@ pre {
 @media (max-width: 480px) {
   .case-pane,
   .result-pane {
-    width: calc(100vw - 56px);
-    max-width: calc(100vw - 56px);
+    width: 100%;
+    max-width: 100%;
   }
 }
