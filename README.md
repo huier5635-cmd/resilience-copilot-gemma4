@@ -23,6 +23,9 @@ Resilience Copilot turns messy disaster-relief notes into responder-reviewed nex
 | Resource | Link |
 | --- | --- |
 | Live demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
+| Architecture | [docs/architecture.md](docs/architecture.md) |
+| Examples | [docs/examples.md](docs/examples.md) |
+| Adaptation guide | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
 | Chinese docs | [README_CN.md](README_CN.md) |
 | Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
 | Gemma 4 evidence notebook | https://www.kaggle.com/code/zhenhuier/notebook5022dfd167 |
@@ -88,6 +91,17 @@ This repository is easiest to adapt when your workflow has three properties:
 - local scenarios can be written as validation cases.
 
 Good next templates: campus safety intake, elder-care hotline triage, public-service request routing, insurance claim intake, NGO volunteer coordination, and compliance support.
+
+For implementation details, see [Architecture](docs/architecture.md), [Examples](docs/examples.md), and the [Adaptation Guide](docs/adaptation_guide.md).
+
+## Star-Friendly Scope
+
+This repository is intentionally small on the public surface:
+
+- root files explain the product and run the static demo;
+- `docs/` explains how to reuse the pattern;
+- large competition attachments and private learning logs are kept out of the root;
+- the demo has no hidden online dependency.
 
 ## Project Status
 
