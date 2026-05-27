@@ -24,6 +24,27 @@
           <div class="status">v0.1.0 public template</div>
         </header>
 
+        <section class="hero-grid" aria-label="Project overview">
+          <article class="hero-card hero-proof">
+            <span class="hero-kicker">What this page shows</span>
+            <h2>Judge-facing triage workflow, not a black-box chatbot</h2>
+            <p>The demo turns messy case notes into a responder-reviewed packet with official-resource checks, Transfer Brief, Audit Trace, and structured case export.</p>
+            <ul class="hero-list">
+              <li>Gemma 4 writes the response language.</li>
+              <li>A deterministic safety sidecar blocks unsupported claims.</li>
+              <li>Human responders keep final routing decisions.</li>
+            </ul>
+          </article>
+          <article class="hero-card hero-start">
+            <span class="hero-kicker">Start here</span>
+            <ol class="hero-steps">
+              <li>Run a sample case and inspect the risk level, review reason, and official routes.</li>
+              <li>Open the architecture and examples docs for the reusable pattern behind the static demo.</li>
+              <li>Use the release and evidence links to trace the public validation surface.</li>
+            </ol>
+          </article>
+        </section>
+
         <div class="review-strip" aria-label="Project review summary">
           <span><strong>Background</strong> disaster-relief triage from messy notes</span>
           <span><strong>Method</strong> Gemma 4 plus deterministic safety sidecar</span>
@@ -51,6 +72,21 @@
           <span><strong>15/15</strong> stress</span>
           <span><strong>0</strong> invented capacity</span>
         </div>
+
+        <section class="orientation-grid" aria-label="How to evaluate the demo">
+          <article class="orientation-card">
+            <h2>Why it is credible</h2>
+            <p>The demo foregrounds operational constraints, verifiable routing, and responder handoff instead of open-ended generation.</p>
+          </article>
+          <article class="orientation-card">
+            <h2>What to inspect</h2>
+            <p>Focus on the review reason, playbook references, official checks, Transfer Brief, and case export rather than just the narrative text.</p>
+          </article>
+          <article class="orientation-card">
+            <h2>What stays out</h2>
+            <p>No live APIs, no hidden online calls, no capacity invention, and no autonomous execution beyond the static public demo surface.</p>
+          </article>
+        </section>
 
         <div class="sample-row">
           <button class="sample is-active" data-scenario="flood">Flood family</button>
