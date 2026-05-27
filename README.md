@@ -11,6 +11,27 @@ Resilience Copilot turns messy crisis notes into responder-reviewed next actions
 
 ![Resilience Copilot demo preview](resilience_copilot_demo_preview.png)
 
+## Quick Start
+
+```python
+from agent import ResilienceAgent
+
+agent = ResilienceAgent()
+result = agent.run("Older adult uses oxygen. Power is out and backup battery is nearly empty.")
+print(result["risk_level"])
+print(result["transfer_brief"])
+```
+
+## Start Here
+
+| If you want to... | Open |
+| --- | --- |
+| Try the public static demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
+| Understand the workflow and boundaries | [docs/architecture.md](docs/architecture.md) |
+| Review scenario behavior | [docs/examples.md](docs/examples.md) |
+| See release scope | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
+| Read the competition writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
+
 ## Links
 
 | Resource | URL |
@@ -19,9 +40,18 @@ Resilience Copilot turns messy crisis notes into responder-reviewed next actions
 | Architecture | [docs/architecture.md](docs/architecture.md) |
 | Examples | [docs/examples.md](docs/examples.md) |
 | Adaptation guide | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
+| Release notes | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
+| Security notes | [docs/security.md](docs/security.md) |
 | Roadmap | [docs/roadmap.md](docs/roadmap.md) |
 | Chinese README | [docs/README_CN.md](docs/README_CN.md) |
 | Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
+
+## Public Surface At A Glance
+
+- Static GitHub Pages demo with sample cases and copyable responder outputs.
+- Documentation for architecture, examples, release scope, adaptation, and security notes.
+- Public validation snapshot: demo `2/2`, holdout `2/2`, stress `15/15`, local gate `ready_to_submit=true`.
+- Deliberately excludes internal logs, competition bundles, and local-only audit artifacts.
 
 ## Method
 
@@ -58,6 +88,7 @@ Validation evidence is summarized in the Kaggle writeup and the Gemma 4 evidence
 ## Repository Layout
 
 ```text
+agent/    reusable safety-bounded agent core
 assets/   static demo code
 docs/     architecture, examples, roadmap, reuse notes
 index.html
