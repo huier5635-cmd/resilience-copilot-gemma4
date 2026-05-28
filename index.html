@@ -15,7 +15,8 @@
             <h1>Resilience Copilot</h1>
             <p class="deck">A safety-bounded agent template for high-risk human-review workflows, shown through a disaster-relief triage demo.</p>
             <nav class="project-links" aria-label="Project links">
-              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4">Code</a>
+              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4">Star on GitHub</a>
+              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/tree/main/agent">Agent Core</a>
               <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/blob/main/docs/architecture.md">Architecture</a>
               <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/releases/tag/v0.1.0">Release</a>
               <a href="https://www.kaggle.com/code/zhenhuier/notebook5022dfd167">Gemma 4 Evidence</a>
@@ -52,6 +53,11 @@
           <span><strong>Validation</strong> demo 2/2, holdout 2/2, stress 15/15</span>
         </div>
 
+        <div class="reuse-strip" aria-label="Reuse path">
+          <span><strong>Star if</strong> you want a bounded agent pattern instead of a generic chatbot demo.</span>
+          <span><strong>Reuse path</strong> open `agent/`, run `python -m agent.core`, then adapt the docs and scenarios.</span>
+        </div>
+
         <div class="teaser-board" aria-label="System overview">
           <div class="flow-line">
             <span>Case note</span>
@@ -62,7 +68,7 @@
           </div>
           <div class="teaser-copy">
             <strong>Safety-bounded learning loop</strong>
-            <p>Validation feedback builds experience, memory, strategy reflection, and reusable skills, but policy changes stay human-reviewed.</p>
+            <p>A Memory Write Gate keeps raw runtime notes out of long-term memory; only validated, human-reviewed feedback can be promoted.</p>
           </div>
         </div>
 
@@ -148,7 +154,7 @@
           <strong>Validation: Demo 2/2 | Holdout 2/2 | Stress 15/15 | Ready to Submit</strong>
           <p>Resilience Copilot is a safety-bounded workflow agent for disaster triage: it turns messy crisis notes into a sixteen-section, responder-reviewed workflow with Transfer Brief, Audit Trace, and structured JSON export.</p>
           <p>Gemma 4 composes responder-facing language under deterministic sidecar constraints; the sidecar checks official-resource routing, blocks unsupported claims, and keeps final decisions with human responders.</p>
-          <p>An offline learning sidecar records local validation feedback into an experience ledger, validation feedback memory, long-term memory system, LangGraph-compatible graph orchestration, strategy reflection, skill library, and no-network tool sandbox. Its memory and graph layers support retrieval, specialist routing, and consolidation for next-round policy ideas only; human review is required before any strategy update.</p>
+          <p>An offline learning sidecar records local validation feedback into an experience ledger, validation feedback memory, Memory Write Gate, long-term memory system, LangGraph-compatible graph orchestration, strategy reflection, skill library, and no-network tool sandbox. Raw runtime input is quarantined; only validated, human-reviewed feedback can be promoted, and protected safety invariants cannot be rewritten by memory.</p>
           <p>It is not a fully autonomous responder and does not replace emergency services. It does not diagnose, invent shelter capacity, invent transport availability, or present unverified rumors as fact.</p>
         </div>
         <div class="grid">
