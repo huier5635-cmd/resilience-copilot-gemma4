@@ -21,11 +21,24 @@ The learning sidecar is offline and review-first. It does not change runtime pol
 ```text
 Validation Feedback
   -> Experience Ledger
+  -> Memory Write Gate
   -> Bounded Long-Term Memory
   -> Strategy Reflection
   -> Human-Reviewed Skill Library
   -> Next-Round Policy Suggestions
 ```
+
+## Memory Pollution Controls
+
+Runtime case notes are not trusted as long-term memory. The public agent core uses a Memory Write Gate:
+
+- raw runtime input is ledger-only;
+- failed or unvalidated feedback is quarantined;
+- long-term memory promotion requires local validation, confidence, and human review;
+- protected invariants cannot be changed by memory;
+- strategy reflection can propose future improvements but cannot update runtime policy automatically.
+
+Protected invariants include no emergency-service replacement, no medical diagnosis, no invented live capacity, no invented transport availability, no external actions, and human review before policy updates.
 
 ## Safety Contract
 
