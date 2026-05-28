@@ -1,0 +1,108 @@
+{
+  "safety_boundaries": [
+    "Do not diagnose medical conditions.",
+    "Do not invent real-time shelter capacity or hospital availability.",
+    "Escalate immediate danger to local emergency services or official responders.",
+    "Ask for location and official local resources before giving place-specific routing."
+  ],
+  "risk_signals": {
+    "high": [
+      "child cold exposure",
+      "older adult missing medication",
+      "pregnancy complication",
+      "chest pain",
+      "trapped by floodwater",
+      "downed power line",
+      "heat illness with medication or mobility risk",
+      "missing person"
+    ],
+    "medium": [
+      "evacuation",
+      "pet-compatible shelter needed",
+      "transport needed",
+      "cooling center or heat safety routing",
+      "lost documents",
+      "minor injury"
+    ],
+    "low": [
+      "preparedness question",
+      "supply checklist",
+      "non-urgent planning"
+    ]
+  },
+  "action_templates": {
+    "high": [
+      "Escalate to local emergency management or emergency services if there is immediate danger.",
+      "Stabilize basic needs: warmth, dry clothing, safe drinking water, and supervision for children or older adults.",
+      "Collect location, callback number, medical constraints, mobility constraints, and pet details for responder handoff."
+    ],
+    "medium": [
+      "Clarify location, household size, accessibility needs, transport needs, and pet requirements.",
+      "Use official shelter or emergency management channels before suggesting a specific facility.",
+      "Prepare a concise handoff note for volunteers or case workers."
+    ],
+    "low": [
+      "Provide a practical checklist.",
+      "Ask one or two clarifying questions.",
+      "Recommend checking official local guidance for updates."
+    ]
+  },
+  "playbook_rules": [
+    {
+      "id": "PB-LIFE-SAFETY-ESCALATE",
+      "title": "Immediate life-safety escalation",
+      "signals": ["high", "electrical hazard near floodwater", "oxygen or powered medical device risk", "immediate flood danger"],
+      "summary": "Escalate immediate danger through emergency services or official local responders before giving routine logistics advice.",
+      "avoid": "Do not tell people to wait out oxygen failure, floodwater entrapment, or electrical hazards."
+    },
+    {
+      "id": "PB-SHELTER-CAPACITY",
+      "title": "Official shelter capacity verification",
+      "signals": ["evacuation or shelter need", "unverified shelter capacity rumor"],
+      "summary": "Confirm live shelter capacity, accessibility, intake rules, and routing through official emergency management or shelter operations.",
+      "avoid": "Do not repeat social-media bed counts or imply guaranteed capacity."
+    },
+    {
+      "id": "PB-MEDICATION-CONTINUITY",
+      "title": "Medication and care continuity",
+      "signals": ["older adult missing medication", "pregnancy or insulin continuity risk", "care continuity concern"],
+      "summary": "Route medication, insulin storage, dialysis, oxygen, prenatal, and asthma needs through official medical triage, clinic, pharmacy, or care coordinator channels.",
+      "avoid": "Do not diagnose, change dosage, or invent pharmacy availability."
+    },
+    {
+      "id": "PB-ACCESSIBLE-TRANSPORT",
+      "title": "Accessible transport routing",
+      "signals": ["transport barrier"],
+      "summary": "Arrange accessible transport through official emergency management logistics, clinic, shelter, or responder channels; avoid flooded roads.",
+      "avoid": "Do not suggest informal travel through unsafe roads or floodwater."
+    },
+    {
+      "id": "PB-PET-SHELTER",
+      "title": "Pet-compatible shelter intake",
+      "signals": ["pet-compatible shelter needed"],
+      "summary": "Verify pet policy, species/size limits, carrier needs, vaccination paperwork, and animal-service options before routing a household.",
+      "avoid": "Do not assume every shelter accepts pets."
+    },
+    {
+      "id": "PB-LANGUAGE-ACCESS",
+      "title": "Qualified language access",
+      "signals": ["language access barrier"],
+      "summary": "Use qualified interpreters or language-access volunteers for medical, legal, registration, and shelter details; confirm understanding in the preferred language.",
+      "avoid": "Do not use children as interpreters for safety-critical details."
+    },
+    {
+      "id": "PB-HEAT-COOLING-CENTER",
+      "title": "Heat response and cooling-center routing",
+      "signals": ["cooling center or heat safety routing", "heat illness with medication or mobility risk"],
+      "summary": "Route heat exposure, cooling-center access, welfare checks, medication storage, and transport needs through public health or official emergency-management heat-response channels.",
+      "avoid": "Do not promise cooling-center capacity, transportation availability, or medical safety without official confirmation."
+    },
+    {
+      "id": "PB-LOW-RISK-PREPAREDNESS",
+      "title": "Preparedness without over-escalation",
+      "signals": ["low", "planning or preparedness request"],
+      "summary": "Give a practical checklist, ask concise follow-up questions, and point to official local guidance for changing conditions.",
+      "avoid": "Do not turn non-urgent planning into false emergency certainty."
+    }
+  ]
+}

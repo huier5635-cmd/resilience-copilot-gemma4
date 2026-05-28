@@ -4,47 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Resilience Copilot</title>
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <main class="shell">
-      <section class="case-pane" id="demo">
+      <section class="case-pane">
         <header class="topbar">
           <div>
             <p class="eyebrow">Gemma 4 Good Hackathon</p>
             <h1>Resilience Copilot</h1>
-            <p class="deck">A safety-bounded agent template for high-risk human-review workflows, shown through a disaster-relief triage demo.</p>
-            <nav class="project-links" aria-label="Project links">
-              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4">Star on GitHub</a>
-              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/tree/main/agent">Agent Core</a>
-              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/blob/main/docs/architecture.md">Architecture</a>
-              <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/releases/tag/v0.1.0">Release</a>
-              <a href="https://www.kaggle.com/code/zhenhuier/notebook5022dfd167">Gemma 4 Evidence</a>
-            </nav>
+            <p class="deck">A public, safety-bounded disaster triage demo that turns messy crisis notes into responder-reviewed next actions, audit trace, and structured handoff.</p>
           </div>
-          <div class="status">v0.1.0 public template</div>
+          <div class="status">static safety demo</div>
         </header>
 
-        <section class="hero-grid" aria-label="Project overview">
-          <article class="hero-card hero-proof">
-            <span class="hero-kicker">What this page shows</span>
-            <h2>Judge-facing triage workflow, not a black-box chatbot</h2>
-            <p>The demo turns messy case notes into a responder-reviewed packet with official-resource checks, Transfer Brief, Audit Trace, and structured case export.</p>
-            <ul class="hero-list">
-              <li>Gemma 4 writes the response language.</li>
-              <li>A deterministic safety sidecar blocks unsupported claims.</li>
-              <li>Human responders keep final routing decisions.</li>
-            </ul>
-          </article>
-          <article class="hero-card hero-start">
-            <span class="hero-kicker">Start here</span>
-            <ol class="hero-steps">
-              <li>Run a sample case and inspect the risk level, review reason, and official routes.</li>
-              <li>Open the architecture and examples docs for the reusable pattern behind the static demo.</li>
-              <li>Use the release and evidence links to trace the public validation surface.</li>
-            </ol>
-          </article>
-        </section>
+        <div class="hero-links" aria-label="Project links">
+          <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4">Star on GitHub</a>
+          <a href="https://github.com/huier5635-cmd/resilience-copilot-gemma4/tree/main/src/agent">Agent Core</a>
+          <a href="https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423">Kaggle Writeup</a>
+          <a href="https://www.kaggle.com/code/zhenhuier/notebook5022dfd167">Evidence Notebook</a>
+        </div>
 
         <div class="review-strip" aria-label="Project review summary">
           <span><strong>Background</strong> disaster-relief triage from messy notes</span>
@@ -53,46 +32,33 @@
           <span><strong>Validation</strong> demo 2/2, holdout 2/2, stress 15/15</span>
         </div>
 
+        <div class="review-guide" aria-label="How to review this demo">
+          <article>
+            <strong>1. Run a case</strong>
+            <p>Choose a sample or paste a case note, then run triage.</p>
+          </article>
+          <article>
+            <strong>2. Inspect the evidence</strong>
+            <p>Check Transfer Brief, Audit Trace, source verification, and JSON export before trusting the route.</p>
+          </article>
+          <article>
+            <strong>3. Reuse the pattern</strong>
+            <p>Open the Agent Core link, then verify no diagnosis, no invented capacity, and official-route checks.</p>
+          </article>
+        </div>
+
         <div class="reuse-strip" aria-label="Reuse path">
           <span><strong>Star if</strong> you want a bounded agent pattern instead of a generic chatbot demo.</span>
-          <span><strong>Reuse path</strong> open `agent/`, run `python -m agent.core`, then adapt the docs and scenarios.</span>
+          <span><strong>Run now</strong> clone the repo, install requirements, and run the reusable agent entry path.</span>
+          <span><strong>Reuse path</strong> inspect the agent core, docs, and sample scenarios before adapting the workflow.</span>
         </div>
 
-        <div class="teaser-board" aria-label="System overview">
-          <div class="flow-line">
-            <span>Case note</span>
-            <span>Risk signals</span>
-            <span>Gemma 4 response</span>
-            <span>Safety check</span>
-            <span>Transfer brief</span>
-          </div>
-          <div class="teaser-copy">
-            <strong>Safety-bounded learning loop</strong>
-            <p>A Memory Write Gate keeps raw runtime notes out of long-term memory; only validated, human-reviewed feedback can be promoted.</p>
-          </div>
+        <div class="method-strip" aria-label="System overview">
+          <span>Detect signals</span>
+          <span>Ground in playbooks</span>
+          <span>Route official checks</span>
+          <span>Export handoff</span>
         </div>
-
-        <div class="project-metrics" aria-label="Validation and safety metrics">
-          <span><strong>2/2</strong> demo</span>
-          <span><strong>2/2</strong> holdout</span>
-          <span><strong>15/15</strong> stress</span>
-          <span><strong>0</strong> invented capacity</span>
-        </div>
-
-        <section class="orientation-grid" aria-label="How to evaluate the demo">
-          <article class="orientation-card">
-            <h2>Why it is credible</h2>
-            <p>The demo foregrounds operational constraints, verifiable routing, and responder handoff instead of open-ended generation.</p>
-          </article>
-          <article class="orientation-card">
-            <h2>What to inspect</h2>
-            <p>Focus on the review reason, playbook references, official checks, Transfer Brief, and case export rather than just the narrative text.</p>
-          </article>
-          <article class="orientation-card">
-            <h2>What stays out</h2>
-            <p>No live APIs, no hidden online calls, no capacity invention, and no autonomous execution beyond the static public demo surface.</p>
-          </article>
-        </section>
 
         <div class="sample-row">
           <button class="sample is-active" data-scenario="flood">Flood family</button>
@@ -127,7 +93,7 @@
         </div>
       </section>
 
-      <section class="result-pane" id="results">
+      <section class="result-pane">
         <div class="risk-strip">
           <span class="risk" id="risk">Risk level</span>
           <span class="timestamp" id="timestamp">waiting</span>
@@ -154,7 +120,7 @@
           <strong>Validation: Demo 2/2 | Holdout 2/2 | Stress 15/15 | Ready to Submit</strong>
           <p>Resilience Copilot is a safety-bounded workflow agent for disaster triage: it turns messy crisis notes into a sixteen-section, responder-reviewed workflow with Transfer Brief, Audit Trace, and structured JSON export.</p>
           <p>Gemma 4 composes responder-facing language under deterministic sidecar constraints; the sidecar checks official-resource routing, blocks unsupported claims, and keeps final decisions with human responders.</p>
-          <p>An offline learning sidecar records local validation feedback into an experience ledger, validation feedback memory, Memory Write Gate, long-term memory system, LangGraph-compatible graph orchestration, strategy reflection, skill library, and no-network tool sandbox. Raw runtime input is quarantined; only validated, human-reviewed feedback can be promoted, and protected safety invariants cannot be rewritten by memory.</p>
+          <p>The architecture path is simple to inspect on this page: risk signals, playbook references, official resource checks, source verification, transfer brief, household message, and final export remain visible side by side.</p>
           <p>It is not a fully autonomous responder and does not replace emergency services. It does not diagnose, invent shelter capacity, invent transport availability, or present unverified rumors as fact.</p>
         </div>
         <div class="grid">
@@ -221,6 +187,6 @@
         </div>
       </section>
     </main>
-    <script src="assets/app.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

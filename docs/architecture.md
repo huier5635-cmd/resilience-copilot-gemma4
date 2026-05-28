@@ -1,75 +1,53 @@
-# Architecture
+# System Architecture
 
-Resilience Copilot is a safety-bounded agent pattern for high-risk workflows where a human reviewer remains accountable. The disaster-relief demo is the reference implementation.
+Resilience Copilot is a safety-bounded LLM agent prototype for high-risk disaster-relief case-note triage. Its design separates language generation from safety-critical control logic: the LLM drafts responder-facing text, while deterministic modules decide risk signals, playbook constraints, resource checks, human review triggers, and audit fields.
 
-## Runtime Flow
+```mermaid
+flowchart TD
+    A["User Case Note<br/>messy volunteer note"] --> B["Input Normalization<br/>clean spacing and preserve uncertainty"]
+    B --> C["Risk Signal Detection<br/>oxygen, medication, heat, flood, transport, language, rumor"]
+    C --> D["Playbook Matching<br/>map signals to auditable safety constraints"]
+    D --> E["LLM / Gemma Generation<br/>draft responder-facing language under constraints"]
+    E --> F["Safety Contract Checking<br/>verify sixteen-section response and blocked claims"]
+    F --> G["Official Resource Verification<br/>require official channels for capacity, routes, transport, clinics"]
+    G --> H["Memory Retrieval / Protected Invariants<br/>retrieve reviewed experience without changing safety policy"]
+    H --> I["Human Review Trigger<br/>route high-risk or uncertain cases to responder review"]
+    I --> J["Structured JSON Export<br/>machine-readable case export and blocked claims"]
+    J --> K["Audit Trace<br/>risk, signals, playbooks, routes, review reason"]
+    K --> L["Responder Handoff<br/>Transfer Brief and next-owner packet"]
 
-```text
-Case Note
-  -> Risk Signal Detector
-  -> Playbook Matcher
-  -> Gemma 4 Generation
-  -> Safety Contract Checker
-  -> 16-section Response
-  -> JSON Export + Audit Trace + Transfer Brief
+    C -. "Pre-generation safety chain: detect risk before drafting" .-> E
+    D -. "Pre-generation safety chain: constrain generation with playbooks" .-> E
+    F -. "Post-generation safety chain: reject incomplete or unsupported output" .-> I
+    G -. "Post-generation safety chain: quarantine unverified resource claims" .-> I
+    H -. "Memory is advisory only; it cannot rewrite protected safety invariants" .-> I
 ```
 
-## Learning Sidecar
+## Module Notes
 
-The learning sidecar is offline and review-first. It does not change runtime policy automatically.
+| Module | Short explanation |
+| --- | --- |
+| User Case Note | Raw message from a volunteer, household, or coordinator. It may contain rumors, missing facts, and urgent risks. |
+| Input Normalization | Keeps the original meaning but standardizes text for deterministic detection. |
+| Risk Signal Detection | Finds operational risk signals such as oxygen outage, child cold exposure, insulin continuity, floodwater, language barrier, or shelter rumor. |
+| Playbook Matching | Selects auditable constraints from `knowledge_base/emergency_playbook.json`. |
+| LLM / Gemma Generation | Uses Gemma 4 for natural-language drafting in the Kaggle evidence path; local scripts use deterministic fallback for reproducible validation. |
+| Safety Contract Checking | Checks the fixed sixteen-section response, structured JSON, audit trace, and unsupported-claim patterns. |
+| Official Resource Verification | Keeps capacity, route, transport, and clinic availability in an "unknown until official source confirms" state. |
+| Memory Retrieval / Protected Invariants | Retrieves validated experience and reusable skills, but cannot update high-risk policy automatically. |
+| Human Review Trigger | Requires human review when risk is high or operational facts need official confirmation. |
+| Structured JSON Export | Produces machine-readable fields for downstream audit and handoff. |
+| Audit Trace | Records why the system made each routing and safety decision. |
+| Responder Handoff | Converts the case into Transfer Brief, responder packet, and household-facing holding message. |
 
-```text
-Validation Feedback
-  -> Experience Ledger
-  -> Memory Write Gate
-  -> Bounded Long-Term Memory
-  -> Strategy Reflection
-  -> Human-Reviewed Skill Library
-  -> Next-Round Policy Suggestions
-```
+## Safety Design
 
-## Memory Pollution Controls
+The core design choice is to put safety-critical decisions outside free-form generation. Memory, reflection, and tool use can help retrieve context or propose future improvements, but they cannot override:
 
-Runtime case notes are not trusted as long-term memory. The public agent core uses a Memory Write Gate:
+- no diagnosis
+- no invented live capacity
+- no invented transport availability
+- no road-safety guarantees
+- no replacement of emergency services
+- human review for high-risk cases
 
-- raw runtime input is ledger-only;
-- failed or unvalidated feedback is quarantined;
-- long-term memory promotion requires local validation, confidence, and human review;
-- protected invariants cannot be changed by memory;
-- strategy reflection can propose future improvements but cannot update runtime policy automatically.
-
-Protected invariants include no emergency-service replacement, no medical diagnosis, no invented live capacity, no invented transport availability, no external actions, and human review before policy updates.
-
-## Safety Contract
-
-The safety contract blocks common failure modes before an answer becomes reviewer-facing:
-
-- no medical diagnosis or treatment instruction;
-- no invented shelter capacity, road status, transport availability, or official confirmation;
-- no unsupported reassurance when power, oxygen, heat, medication, mobility, language access, or rumor risk appears;
-- no replacement for emergency services;
-- no automatic action outside the review boundary.
-
-## Why This Is Not a Free-Running Agent
-
-The project is agentic in orchestration and feedback use, but bounded in authority. The system can detect risk, retrieve relevant playbook constraints, compose a structured response, export an audit trace, and propose future strategy improvements. It cannot contact responders, book resources, promote new policies, or treat unverified claims as facts.
-
-## Adaptation Points
-
-To adapt the pattern to another domain, replace these components:
-
-| Component | Disaster demo | Other high-risk workflow |
-| --- | --- | --- |
-| Risk signals | oxygen, heat, rumors, shelter, mobility | domain-specific red flags |
-| Playbooks | emergency routing constraints | policy or SOP constraints |
-| Response contract | 16 disaster triage sections | reviewer-facing checklist |
-| Validation cases | demo, holdout, stress scenarios | local scenario suite |
-| Safety sidecar | no diagnosis, no invented capacity | domain-specific blocked claims |
-
-Keep these components stable:
-
-- human review;
-- deterministic safety checks;
-- audit trace;
-- local validation gate;
-- no hidden online dependency for review.

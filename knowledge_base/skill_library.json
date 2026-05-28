@@ -1,0 +1,297 @@
+{
+  "schema_version": "resilience-skill-library-v1",
+  "source": "generated from local validation experience ledger",
+  "human_review_required": true,
+  "auto_apply_policy_updates": false,
+  "playbook_usage": [
+    [
+      "PB-LIFE-SAFETY-ESCALATE",
+      15
+    ],
+    [
+      "PB-SHELTER-CAPACITY",
+      13
+    ],
+    [
+      "PB-MEDICATION-CONTINUITY",
+      9
+    ],
+    [
+      "PB-ACCESSIBLE-TRANSPORT",
+      9
+    ],
+    [
+      "PB-LANGUAGE-ACCESS",
+      6
+    ],
+    [
+      "PB-PET-SHELTER",
+      5
+    ],
+    [
+      "PB-HEAT-COOLING-CENTER",
+      3
+    ],
+    [
+      "PB-LOW-RISK-PREPAREDNESS",
+      1
+    ]
+  ],
+  "skill_usage": [
+    [
+      "SKILL-ICS-TRANSFER-BRIEF",
+      19
+    ],
+    [
+      "SKILL-LIFE-SAFETY-ESCALATION",
+      15
+    ],
+    [
+      "SKILL-RUMOR-QUARANTINE",
+      13
+    ],
+    [
+      "SKILL-ACCESSIBLE-TRANSPORT",
+      9
+    ],
+    [
+      "SKILL-LANGUAGE-ACCESS-HANDOFF",
+      6
+    ],
+    [
+      "SKILL-PET-COMPATIBLE-SHELTER",
+      5
+    ],
+    [
+      "SKILL-HEATWAVE-ROUTING",
+      3
+    ]
+  ],
+  "skills": [
+    {
+      "id": "SKILL-LIFE-SAFETY-ESCALATION",
+      "name": "life-safety escalation",
+      "trigger_playbooks": [
+        "PB-LIFE-SAFETY-ESCALATE"
+      ],
+      "trigger_signals": [
+        "oxygen",
+        "electrical",
+        "floodwater",
+        "pregnancy",
+        "child cold exposure"
+      ],
+      "safe_actions": [
+        "route immediate danger through emergency services or official local responders",
+        "collect callback, location, device, medication, and mobility constraints for handoff",
+        "keep final routing with a human responder"
+      ],
+      "blocked_actions": [
+        "wait-and-see advice for urgent device failure",
+        "medical diagnosis",
+        "capacity or transport guarantees"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 15,
+        "passed_case_count": 15,
+        "example_case_ids": [
+          "demo_flood_family_pet_medication",
+          "holdout_powerline_flood",
+          "holdout_transport_dialysis",
+          "stress_pregnancy_insulin_evacuation",
+          "stress_oxygen_power_outage"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-RUMOR-QUARANTINE",
+      "name": "rumor quarantine and source verification",
+      "trigger_playbooks": [
+        "PB-SHELTER-CAPACITY"
+      ],
+      "trigger_signals": [
+        "unverified shelter capacity rumor",
+        "evacuation or shelter need"
+      ],
+      "safe_actions": [
+        "label social media or word-of-mouth capacity claims as unverified",
+        "route capacity checks through shelter operations or emergency management",
+        "say what is known, unknown, and being checked"
+      ],
+      "blocked_actions": [
+        "repeat unverified bed counts",
+        "promise live shelter capacity"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 13,
+        "passed_case_count": 13,
+        "example_case_ids": [
+          "demo_flood_family_pet_medication",
+          "holdout_transport_dialysis",
+          "stress_pregnancy_insulin_evacuation",
+          "stress_language_access_family",
+          "stress_shelter_capacity_rumor"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-LANGUAGE-ACCESS-HANDOFF",
+      "name": "qualified language access handoff",
+      "trigger_playbooks": [
+        "PB-LANGUAGE-ACCESS"
+      ],
+      "trigger_signals": [
+        "language access barrier"
+      ],
+      "safe_actions": [
+        "request qualified interpretation for medical, legal, registration, and shelter details",
+        "record preferred language in the transfer brief",
+        "confirm understanding before routing"
+      ],
+      "blocked_actions": [
+        "use children as interpreters for safety-critical details"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 6,
+        "passed_case_count": 6,
+        "example_case_ids": [
+          "stress_language_access_family",
+          "stress_cantonese_language_access",
+          "stress_responder_packet_no_false_promises",
+          "stress_household_message_language_safe",
+          "stress_heatwave_cooling_center_routing"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-HEATWAVE-ROUTING",
+      "name": "heatwave and cooling-center routing",
+      "trigger_playbooks": [
+        "PB-HEAT-COOLING-CENTER"
+      ],
+      "trigger_signals": [
+        "cooling center",
+        "heat illness",
+        "extreme heat"
+      ],
+      "safe_actions": [
+        "route heat exposure through public health or emergency-management heat channels",
+        "verify cooling-center hours, accessible intake, hydration support, and medication storage",
+        "record transport barriers before suggesting routing"
+      ],
+      "blocked_actions": [
+        "promise cooling-center capacity",
+        "claim medical safety without confirmation"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 3,
+        "passed_case_count": 3,
+        "example_case_ids": [
+          "stress_cantonese_language_access",
+          "stress_heatwave_cooling_center_routing",
+          "stress_source_verification_rumor_freshness"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-ACCESSIBLE-TRANSPORT",
+      "name": "accessible transport routing",
+      "trigger_playbooks": [
+        "PB-ACCESSIBLE-TRANSPORT"
+      ],
+      "trigger_signals": [
+        "transport barrier"
+      ],
+      "safe_actions": [
+        "route transport through official logistics or responder channels",
+        "avoid flooded roads and unverified routes",
+        "carry transport uncertainty into the transfer brief"
+      ],
+      "blocked_actions": [
+        "suggest informal travel through unsafe roads",
+        "guarantee vehicle availability"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 9,
+        "passed_case_count": 9,
+        "example_case_ids": [
+          "holdout_transport_dialysis",
+          "stress_pregnancy_insulin_evacuation",
+          "stress_official_resource_routing",
+          "stress_playbook_grounding_multi_need",
+          "stress_responder_packet_no_false_promises"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-PET-COMPATIBLE-SHELTER",
+      "name": "pet-compatible shelter check",
+      "trigger_playbooks": [
+        "PB-PET-SHELTER"
+      ],
+      "trigger_signals": [
+        "pet-compatible shelter needed"
+      ],
+      "safe_actions": [
+        "verify pet policy, species or size limits, carrier needs, and documentation",
+        "route through animal services or shelter pet desk"
+      ],
+      "blocked_actions": [
+        "assume every shelter accepts pets"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 5,
+        "passed_case_count": 5,
+        "example_case_ids": [
+          "demo_flood_family_pet_medication",
+          "stress_official_resource_routing",
+          "stress_playbook_grounding_multi_need",
+          "stress_audit_trace_reviewability",
+          "stress_ics_transfer_brief_handoff"
+        ]
+      }
+    },
+    {
+      "id": "SKILL-ICS-TRANSFER-BRIEF",
+      "name": "ICS-style transfer brief",
+      "trigger_playbooks": [],
+      "trigger_signals": [
+        "transfer brief",
+        "human review"
+      ],
+      "safe_actions": [
+        "summarize incident snapshot, objectives, constraints, resources, communications, and unresolved questions",
+        "carry source verification and safety constraints into shift handoff"
+      ],
+      "blocked_actions": [
+        "drop unknowns from the handoff",
+        "hide unsupported claims"
+      ],
+      "human_review_status": "review_required_before_policy_update",
+      "validation_support": {
+        "case_count": 19,
+        "passed_case_count": 19,
+        "example_case_ids": [
+          "demo_flood_family_pet_medication",
+          "demo_preparedness_heat",
+          "holdout_powerline_flood",
+          "holdout_transport_dialysis",
+          "stress_pregnancy_insulin_evacuation"
+        ]
+      }
+    }
+  ],
+  "blocked_global_actions": [
+    "autonomous emergency calls",
+    "shelter booking",
+    "medical diagnosis",
+    "live capacity promises",
+    "transport availability promises"
+  ]
+}

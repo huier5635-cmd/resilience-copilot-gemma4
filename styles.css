@@ -3,12 +3,10 @@
   --ink: #102027;
   --muted: #52676b;
   --line: #d8e2e0;
-  --bg: #eef3f5;
+  --bg: #f4f7f2;
   --panel: #ffffff;
   --accent: #0f766e;
   --accent-soft: #dcefed;
-  --blue: #1d4ed8;
-  --navy: #172033;
   --danger: #b42318;
   --warn: #b54708;
   --low: #2563eb;
@@ -22,9 +20,7 @@ body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
-  background:
-    linear-gradient(180deg, rgba(23, 32, 51, 0.08), rgba(238, 243, 245, 0) 220px),
-    var(--bg);
+  background: var(--bg);
   overflow-x: hidden;
 }
 
@@ -43,7 +39,6 @@ body {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 18px;
-  box-shadow: 0 16px 42px rgba(22, 42, 54, 0.08);
 }
 
 .topbar,
@@ -77,31 +72,25 @@ h1 {
   line-height: 1.4;
 }
 
-.project-links {
+.hero-links {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
+  margin: 14px 0 0;
 }
 
-.project-links a {
+.hero-links a {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  border: 1px solid #b8cccf;
+  min-height: 36px;
+  border: 1px solid #b7d7d3;
   border-radius: 999px;
-  padding: 7px 12px;
-  color: #173a42;
-  background: #f7fbff;
-  font-size: 12px;
-  font-weight: 850;
-  text-decoration: none;
-}
-
-.project-links a:hover {
-  border-color: var(--accent);
+  padding: 8px 12px;
   color: #075f58;
   background: #eef8f6;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
 }
 
 .review-strip {
@@ -132,95 +121,65 @@ h1 {
   text-transform: uppercase;
 }
 
-.teaser-board {
+.review-guide,
+.reuse-strip,
+.method-strip {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(220px, 0.75fr);
-  gap: 12px;
-  margin: 0 0 14px;
-  border: 1px solid #c6d6db;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.review-guide article,
+.reuse-strip span,
+.method-strip span {
+  min-width: 0;
+  border: 1px solid var(--line);
   border-radius: 8px;
+  background: #fbfcfa;
+}
+
+.review-guide article {
   padding: 12px;
-  background: #f8fbff;
 }
 
-.flow-line {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-  align-items: stretch;
-}
-
-.flow-line span {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 54px;
-  border: 1px solid #bbccd1;
-  border-radius: 8px;
-  padding: 9px;
-  color: #102b34;
-  background: #ffffff;
-  font-size: 12px;
-  font-weight: 850;
-  line-height: 1.25;
-  text-align: center;
-}
-
-.flow-line span:not(:last-child)::after {
-  content: "->";
-  position: absolute;
-  right: -15px;
-  top: 50%;
-  z-index: 2;
-  transform: translateY(-50%);
-  color: var(--accent);
-  font-weight: 900;
-}
-
-.teaser-copy {
-  border-left: 3px solid var(--accent);
-  padding-left: 12px;
-}
-
-.teaser-copy strong {
+.review-guide strong {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   color: #075f58;
   font-size: 13px;
-  line-height: 1.25;
 }
 
-.teaser-copy p {
+.review-guide p {
   color: #294247;
   font-size: 13px;
   line-height: 1.45;
 }
 
-.project-metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0 0 16px;
-}
-
-.project-metrics span {
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px;
+.reuse-strip span {
+  padding: 12px;
   color: #294247;
-  background: #fbfcfa;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
-.project-metrics strong {
+.reuse-strip strong {
   display: block;
-  color: var(--blue);
-  font-size: 20px;
-  line-height: 1.1;
+  margin-bottom: 5px;
+  color: #075f58;
+  font-size: 13px;
+}
+
+.method-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.method-strip span {
+  padding: 10px 12px;
+  color: #294247;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
 }
 
 h2 {
@@ -523,9 +482,8 @@ pre {
   .grid,
   .decision-brief,
   .review-strip,
-  .teaser-board,
-  .flow-line,
-  .project-metrics {
+  .review-guide,
+  .method-strip {
     grid-template-columns: 1fr;
   }
 
@@ -557,10 +515,6 @@ pre {
     white-space: normal;
   }
 
-  .flow-line span:not(:last-child)::after {
-    content: "";
-  }
-
   .sample-row {
     display: grid;
     grid-template-columns: 1fr;
@@ -573,6 +527,11 @@ pre {
   .actions button {
     flex: 1 1 100%;
     white-space: normal;
+  }
+
+  .hero-links a {
+    flex: 1 1 100%;
+    justify-content: center;
   }
 
   .review {

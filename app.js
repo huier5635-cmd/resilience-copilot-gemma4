@@ -122,7 +122,7 @@ function detectRisk(text) {
   if (includesAny(lower, ["grandmother", "grandfather", "older adult", "elderly"]) && includesAny(lower, ["medicine", "medication", "blood pressure", "dialysis"])) {
     detected.push("older adult medication or care continuity");
   }
-  if (includesAny(lower, ["power line", "downed line", "electric"]) && includesAny(lower, ["flood", "water"])) {
+  if (includesAny(lower, ["power line", "downed line", "electric"]) && includesAny(lower, ["flood", "floodwater", "water"])) {
     detected.push("electrical hazard near floodwater");
   }
   if (includesAny(lower, ["pregnant", "prenatal", "pregnancy", "insulin"])) {
@@ -137,9 +137,9 @@ function detectRisk(text) {
   const hasHighSignal = detected.length > 0;
   if (includesAny(lower, ["evacuated", "evacuation", "shelter"])) detected.push("evacuation or shelter need");
   if (includesAny(lower, ["pet", "dog", "cat"])) detected.push("pet-compatible shelter needed");
-  if (includesAny(lower, ["transport", "road", "ride", "bus", "no car"])) detected.push("transport barrier");
-  if (includesAny(lower, ["dialysis", "appointment", "care"])) detected.push("care continuity concern");
-  if (includesAny(lower, ["spanish-speaking", "interpreter", "translation", "language barrier", "cannot understand", "limited english", "cantonese", "mandarin", "chinese"])) detected.push("language access barrier");
+  if (includesAny(lower, ["transport", "road", "ride", "bus", "no car", "drive", "driving"])) detected.push("transport barrier");
+  if (includesAny(lower, ["dialysis", "appointment", "care", "asthma"])) detected.push("care continuity concern");
+  if (includesAny(lower, ["spanish-speaking", "interpreter", "translation", "language barrier", "cannot understand", "limited english", "cantonese", "mandarin", "chinese", "vietnamese", "arabic"])) detected.push("language access barrier");
   if ((includesAny(lower, ["rumor", "social media"]) && includesAny(lower, ["shelter", "beds", "capacity"]))) detected.push("unverified shelter capacity rumor");
   if (includesAny(lower, ["cooling center", "heat outage", "no cooling", "overheated", "extreme heat", "heat illness"])) detected.push("cooling center or heat safety routing");
   if (hasHighSignal) return { level: "high", signals: detected };

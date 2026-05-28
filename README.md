@@ -1,115 +1,209 @@
 # Resilience Copilot
 
-**Safety-bounded agent for disaster-relief triage, built with Gemma 4.**
+## Safety-Bounded LLM Agent for High-Risk Decision Support
 
-[![Demo](https://img.shields.io/badge/demo-live-1f6feb)](https://huier5635-cmd.github.io/resilience-copilot-gemma4/)
-[![Validation](https://img.shields.io/badge/validation-2%2F2%20%7C%202%2F2%20%7C%2015%2F15-brightgreen)](#validation)
-[![Gemma 4](https://img.shields.io/badge/model-Gemma%204-7c3aed)](https://www.kaggle.com/code/zhenhuier/notebook5022dfd167)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
-Resilience Copilot turns messy crisis notes into responder-reviewed next actions. It combines Gemma 4 generation with a deterministic safety sidecar, official-resource checks, a Transfer Brief, an Audit Trace, structured JSON export, and an offline learning loop that keeps strategy updates human-reviewed.
+Resilience Copilot is a safety-bounded LLM agent prototype for disaster-relief case-note triage. It studies how deterministic rules, risk signal detection, bounded memory, tool/resource verification, human review triggers, and audit traces can make LLM-assisted high-risk decision support more reliable and easier to inspect.
 
 ![Resilience Copilot demo preview](resilience_copilot_demo_preview.png)
 
+## Quick Links
+
+- Live demo: https://huier5635-cmd.github.io/resilience-copilot-gemma4/
+- GitHub repository: https://github.com/huier5635-cmd/resilience-copilot-gemma4
+- Kaggle writeup: https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423
+- Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
+- Architecture note: [docs/architecture.md](docs/architecture.md)
+- Project report: [docs/project_report.md](docs/project_report.md)
+- Repository audit: [docs/repository_audit_report.md](docs/repository_audit_report.md)
+
+## Project Background
+
+Disaster-relief volunteers often receive messy notes: missing locations, unverified rumors, medication continuity concerns, transport barriers, language-access needs, pets, and uncertain shelter status. A normal chatbot can produce fluent text, but fluency is not enough in high-risk settings. The harder problem is controlling what the model is allowed to claim, when a human responder must review the case, and how every recommendation can be audited later.
+
+This project turns that problem into a computer-science prototype: a bounded agent that uses an LLM for responder-facing language while deterministic sidecars handle safety constraints, source verification, memory policy, and structured export.
+
+## Core Problem
+
+The project asks:
+
+> How can we build an LLM agent for high-risk case-note processing that remains useful, reproducible, auditable, and bounded by safety rules?
+
+The system does not try to replace emergency services, diagnose medical conditions, or promise live resource availability. It instead converts uncertain notes into a responder handoff that clearly separates known facts, unknowns, official checks, blocked claims, and human review reasons.
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    A["User Case Note"] --> B["Input Normalization"]
+    B --> C["Risk Signal Detection"]
+    C --> D["Playbook Matching"]
+    D --> E["LLM / Gemma Generation"]
+    E --> F["Safety Contract Checking"]
+    F --> G["Official Resource Verification"]
+    G --> H["Memory Retrieval / Protected Invariants"]
+    H --> I["Human Review Trigger"]
+    I --> J["Structured JSON Export"]
+    J --> K["Audit Trace"]
+    K --> L["Responder Handoff"]
+
+    C -. "pre-generation constraints" .-> E
+    D -. "playbook constraints" .-> E
+    F -. "post-generation checks" .-> I
+    G -. "no invented capacity or transport" .-> I
+    H -. "memory suggests, never rewrites safety policy" .-> I
+```
+
+See [docs/architecture.md](docs/architecture.md) for the full module explanation.
+
+## Core Modules
+
+| Module | Role |
+| --- | --- |
+| Risk Signal Detection | Detects oxygen, medication, heat, flood, language, transport, shelter-rumor, pet, and power-related risk signals. |
+| Playbook Matching | Maps detected signals to auditable response constraints in `knowledge_base/emergency_playbook.json`. |
+| Gemma Generation | Uses Gemma 4 evidence for responder-facing language generation; local fallback remains deterministic for reproducibility. |
+| Deterministic Safety Sidecar | Enforces blocked claims, human review, official-resource-first routing, and response-contract checks. |
+| Safety Contract Checking | Verifies the sixteen-section response shape, structured JSON, audit trace, and unsupported-claim rules. |
+| Official Resource Verification | Uses an offline sandbox to require official channels before sharing capacity, transport, road, or clinic claims. |
+| Bounded Long-Term Memory | Retrieves validated experience while quarantining unreviewed runtime observations. |
+| Protected Safety Invariants | Prevent memory or strategy reflection from modifying high-risk safety policy without human review. |
+| Human Review Trigger | Marks high-risk and verification-sensitive cases for responder review before final routing. |
+| Audit Trace | Records risk level, signals, playbooks, official routes, blocked claims, and review reasons. |
+
 ## Quick Start
 
-```bash
-git clone https://github.com/huier5635-cmd/resilience-copilot-gemma4.git
-cd resilience-copilot-gemma4
-python -m agent.core
+```powershell
+pip install -r requirements.txt
+python scripts\run_demo.py
 ```
 
-Or import the reusable core directly:
+Run a specific benchmark case:
 
-```python
-from agent import ResilienceAgent
-
-agent = ResilienceAgent()
-result = agent.run("Older adult uses oxygen. Power is out and backup battery is nearly empty.")
-print(result["risk_level"])
-print(result["transfer_brief"])
+```powershell
+python scripts\run_demo.py --case-id bench_001_oxygen_power_outage
 ```
 
-## Why This Repo Is Worth Reusing
+Run a custom case note:
 
-- Small public surface: reusable `agent/` core, static demo, and focused docs.
-- Safety-bounded pattern: deterministic checks, Memory Write Gate, audit trace, transfer brief, and human review.
-- Fast evaluation path: live demo, preview image, architecture notes, examples, and a tagged release.
-
-## Start Here
-
-| If you want to... | Open |
-| --- | --- |
-| Try the public static demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
-| Understand the workflow and boundaries | [docs/architecture.md](docs/architecture.md) |
-| Review scenario behavior | [docs/examples.md](docs/examples.md) |
-| See release scope | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
-| Read the competition writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
-
-## Links
-
-| Resource | URL |
-| --- | --- |
-| Live demo | https://huier5635-cmd.github.io/resilience-copilot-gemma4/ |
-| Architecture | [docs/architecture.md](docs/architecture.md) |
-| Examples | [docs/examples.md](docs/examples.md) |
-| Adaptation guide | [docs/adaptation_guide.md](docs/adaptation_guide.md) |
-| Release notes | [docs/release_notes_v0.1.0.md](docs/release_notes_v0.1.0.md) |
-| Security notes | [docs/security.md](docs/security.md) |
-| Roadmap | [docs/roadmap.md](docs/roadmap.md) |
-| Chinese README | [docs/README_CN.md](docs/README_CN.md) |
-| Kaggle writeup | https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423 |
-
-## Public Surface At A Glance
-
-- Static GitHub Pages demo with sample cases and copyable responder outputs.
-- Documentation for architecture, examples, release scope, adaptation, and security notes.
-- Public validation snapshot: demo `2/2`, holdout `2/2`, stress `15/15`, local gate `ready_to_submit=true`.
-- Deliberately excludes internal logs, competition bundles, and local-only audit artifacts.
-
-## Method
-
-```text
-Case Note
-  -> Risk Signal Detector
-  -> Playbook Matcher
-  -> Gemma 4 Response
-  -> Safety Contract Checker
-  -> Transfer Brief + Audit Trace + JSON Export
+```powershell
+python scripts\run_demo.py --scenario "An older adult uses oxygen and the backup battery is empty during a power outage."
 ```
 
-```text
-Validation Feedback
-  -> Experience Ledger
-  -> Memory Write Gate
-  -> Bounded Memory
-  -> Strategy Reflection
-  -> Human-Reviewed Skill Library
+The project runs in deterministic fallback mode by default. No external API key is required for local validation or evaluation. Optional environment variables are documented in [.env.example](.env.example).
+
+## Demo Usage
+
+Open the public demo and choose one of the sample cases:
+
+https://huier5635-cmd.github.io/resilience-copilot-gemma4/
+
+Each case displays:
+
+- input case note
+- detected risk signals
+- matched playbooks
+- responder-facing generated content
+- safety contract checks
+- human review reason
+- official resource checks
+- structured JSON export
+- audit trace
+- Transfer Brief and responder handoff
+
+## Experiments and Validation
+
+The hackathon did not provide an official training dataset, so the project uses scenario-based local validation and a self-built safety benchmark. Results should be read as engineering validation, not real-world outcome claims.
+
+Run the original Kaggle local gate:
+
+```powershell
+python scripts\run_local_validation.py
 ```
 
-The system is not an unrestricted autonomous responder. It does not call emergency services, diagnose conditions, book shelters, invent live capacity, present rumors as verified facts, or promote raw runtime input into long-term memory.
-
-## Validation
+Current locked Kaggle gate:
 
 | Gate | Result |
-| --- | --- |
+| --- | ---: |
 | Demo cases | 2/2 |
 | Holdout cases | 2/2 |
 | Stress cases | 15/15 |
-| Local gate | `ready_to_submit=true` |
+| Final local gate | `ready_to_submit=true` |
 
-Validation evidence is summarized in the Kaggle writeup and the Gemma 4 evidence notebook. The public site keeps only the judge-facing demo and documentation surface.
+Run the research-style benchmark:
 
-## Repository Layout
-
-```text
-agent/    reusable safety-bounded agent core
-assets/   static demo code
-docs/     architecture, examples, roadmap, reuse notes
-index.html
-README.md
-LICENSE
-resilience_copilot_demo_preview.png
+```powershell
+python scripts\run_eval.py
 ```
 
-The public root is intentionally small. Full competition logs, learning notes, old bundles, and local audit files are kept out of this repository surface.
+Latest self-built benchmark summary: [docs/benchmark_eval_report.md](docs/benchmark_eval_report.md)
+
+Run the stress report:
+
+```powershell
+python scripts\run_stress_test.py
+```
+
+Latest stress report: [docs/stress_test_report.md](docs/stress_test_report.md)
+
+Run tests:
+
+```powershell
+python -m pytest tests
+```
+
+The benchmark compares:
+
+- A. Base LLM fallback
+- B. LLM + Risk Signal Detection
+- C. LLM + Safety Sidecar
+- D. LLM + Safety Sidecar + Memory
+- E. LLM + Safety Sidecar + Tool/Resource Verification
+
+Metrics include contract pass rate, unsafe response rate, missing risk signal rate, hallucinated resource rate, human review trigger rate, structured JSON valid rate, and audit trace complete rate.
+
+## Safety Mechanisms
+
+Resilience Copilot is intentionally conservative:
+
+- no medical diagnosis
+- no invented shelter capacity
+- no invented transport availability
+- no road-safety guarantees
+- no unsupported clinic or pharmacy availability claims
+- no child or ad hoc interpreter for sensitive details
+- no replacement of emergency services
+- human review required for high-risk and verification-sensitive cases
+- memory can retrieve examples but cannot rewrite protected safety invariants
+
+## Project Highlights
+
+- Safety-bounded LLM agent architecture for high-risk decision support.
+- Deterministic safety sidecar before and after generation.
+- Risk signal detection and playbook matching grounded in auditable rules.
+- Safety contract checking for a sixteen-section response.
+- Official resource verification sandbox for capacity, transport, road, and clinic claims.
+- Structured JSON export plus Audit Trace for reproducibility.
+- Bounded long-term memory with validation feedback memory and protected safety invariants.
+- Human review trigger instead of fully autonomous dispatch.
+- Self-built benchmark and stress suite for repeatable safety evaluation.
+
+## Limitations
+
+- The benchmark is hand-authored and small; it is not a real disaster-response dataset.
+- The local demo uses deterministic fallback behavior for reproducibility.
+- The project does not perform live official-resource lookup.
+- The memory system is a bounded prototype; human review is required before long-term promotion.
+- The system is not a medical tool, emergency dispatch tool, or autonomous rescue system.
+
+## Future Work
+
+- Add expert-reviewed benchmark annotations.
+- Replace the offline tool sandbox with approved official-resource APIs.
+- Extend the memory write gate with review workflows and provenance signatures.
+- Add multi-agent planning only under deterministic safety contracts.
+- Evaluate cross-model transfer with Gemma, Qwen, DeepSeek, GPT, and local models.
+- Study memory pollution, policy drift, and auditability in high-risk LLM agents.
+
+## Research Keywords
+
+Trustworthy AI, LLM safety, agent safety, high-risk decision support, human-in-the-loop AI, audit trace, tool calling sandbox, bounded memory, memory pollution, safety contract, disaster informatics, responsible AI.
