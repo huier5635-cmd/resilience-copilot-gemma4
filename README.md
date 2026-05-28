@@ -13,6 +13,14 @@ Resilience Copilot turns messy crisis notes into responder-reviewed next actions
 
 ## Quick Start
 
+```bash
+git clone https://github.com/huier5635-cmd/resilience-copilot-gemma4.git
+cd resilience-copilot-gemma4
+python -m agent.core
+```
+
+Or import the reusable core directly:
+
 ```python
 from agent import ResilienceAgent
 
@@ -21,6 +29,12 @@ result = agent.run("Older adult uses oxygen. Power is out and backup battery is 
 print(result["risk_level"])
 print(result["transfer_brief"])
 ```
+
+## Why This Repo Is Worth Reusing
+
+- Small public surface: reusable `agent/` core, static demo, and focused docs.
+- Safety-bounded pattern: deterministic checks, Memory Write Gate, audit trace, transfer brief, and human review.
+- Fast evaluation path: live demo, preview image, architecture notes, examples, and a tagged release.
 
 ## Start Here
 
@@ -67,12 +81,13 @@ Case Note
 ```text
 Validation Feedback
   -> Experience Ledger
+  -> Memory Write Gate
   -> Bounded Memory
   -> Strategy Reflection
   -> Human-Reviewed Skill Library
 ```
 
-The system is not an unrestricted autonomous responder. It does not call emergency services, diagnose conditions, book shelters, invent live capacity, or present rumors as verified facts.
+The system is not an unrestricted autonomous responder. It does not call emergency services, diagnose conditions, book shelters, invent live capacity, present rumors as verified facts, or promote raw runtime input into long-term memory.
 
 ## Validation
 
