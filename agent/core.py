@@ -14,6 +14,16 @@ import re
 from typing import Iterable
 
 
+PROTECTED_INVARIANTS = (
+    "do not replace emergency services",
+    "do not provide medical diagnosis",
+    "do not invent live shelter capacity",
+    "do not invent transport availability",
+    "do not execute external actions",
+    "require human review before policy updates",
+)
+
+
 @dataclass
 class Skill:
     skill_id: str
@@ -28,7 +38,46 @@ class Experience:
     signals: list[str]
     outcome: str
     reflection: str
+    source_type: str
+    validation_status: str
+    confidence: float
+    human_reviewed: bool
+    promotion_status: str
+    blocked_reason: list[str]
     created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+
+class MemoryWriteGate:
+    """Controls which experiences can become durable memory."""
+
+    trusted_sources = {"local_validation", "reviewed_case"}
+
+    def evaluate(self, *, source_type: str, validation_status: str, human_reviewed: bool, confidence: float) -> dict:
+        reasons: list[str] = []
+        can_write_ledger = True
+        can_promote_long_term = True
+
+        if source_type not in self.trusted_sources:
+            can_promote_long_term = False
+            reasons.append("runtime input is ledger-only until validated")
+        if validation_status != "passed":
+            can_promote_long_term = False
+            reasons.append("validation has not passed")
+        if not human_reviewed:
+            can_promote_long_term = False
+            reasons.append("human review is required")
+        if confidence < 0.75:
+            can_promote_long_term = False
+            reasons.append("confidence below promotion threshold")
+
+        return {
+            "can_write_experience_ledger": can_write_ledger,
+            "can_promote_long_term": can_promote_long_term,
+            "can_update_policy": False,
+            "promotion_status": "approved_long_term_memory" if can_promote_long_term else "quarantined_pending_review",
+            "blocked_reason": reasons,
+            "protected_invariants": list(PROTECTED_INVARIANTS),
+        }
 
 
 class ResilienceAgent:
@@ -40,6 +89,7 @@ class ResilienceAgent:
 
     def __init__(self) -> None:
         self.experience_ledger: list[Experience] = []
+        self.memory_gate = MemoryWriteGate()
         self.skills = [
             Skill(
                 "life-safety-escalation",
@@ -79,7 +129,15 @@ class ResilienceAgent:
             ),
         ]
 
-    def run(self, case_note: str) -> dict:
+    def run(
+        self,
+        case_note: str,
+        *,
+        source_type: str = "runtime_case_note",
+        validation_status: str = "runtime_only",
+        human_reviewed: bool = False,
+        confidence: float = 0.5,
+    ) -> dict:
         signals = self.detect_signals(case_note)
         high_signals = {"oxygen", "power outage", "battery", "downed line"}
         risk_level = "high" if high_signals & set(signals) else "medium" if signals else "low"
@@ -104,8 +162,24 @@ class ResilienceAgent:
             "audit_trace": audit_trace,
             "safety_contract": safety_contract,
         }
-        self.record_experience(result)
+        result["memory_write_gate"] = self.record_experience(
+            result,
+            source_type=source_type,
+            validation_status=validation_status,
+            human_reviewed=human_reviewed,
+            confidence=confidence,
+        )
         return result
+
+    def run_validated_case(self, case_note: str) -> dict:
+        """Record a local validation case as human-reviewed memory input."""
+        return self.run(
+            case_note,
+            source_type="local_validation",
+            validation_status="passed",
+            human_reviewed=True,
+            confidence=0.95,
+        )
 
     def detect_signals(self, case_note: str) -> list[str]:
         text = case_note.lower()
@@ -160,7 +234,21 @@ class ResilienceAgent:
             "Responder action: verify official resources and keep final decision with a human reviewer.",
         ]
 
-    def record_experience(self, result: dict) -> None:
+    def record_experience(
+        self,
+        result: dict,
+        *,
+        source_type: str,
+        validation_status: str,
+        human_reviewed: bool,
+        confidence: float,
+    ) -> dict:
+        gate_decision = self.memory_gate.evaluate(
+            source_type=source_type,
+            validation_status=validation_status,
+            human_reviewed=human_reviewed,
+            confidence=confidence,
+        )
         case_id = f"case-{len(self.experience_ledger) + 1:04d}"
         self.experience_ledger.append(
             Experience(
@@ -168,17 +256,33 @@ class ResilienceAgent:
                 signals=result["signals"],
                 outcome=result["risk_level"],
                 reflection="Preserve safety contract; propose skill changes only after human review.",
+                source_type=source_type,
+                validation_status=validation_status,
+                confidence=confidence,
+                human_reviewed=human_reviewed,
+                promotion_status=gate_decision["promotion_status"],
+                blocked_reason=gate_decision["blocked_reason"],
             )
         )
+        return {"case_id": case_id, **gate_decision}
 
     def reflect_strategy(self) -> dict:
         signal_counts: dict[str, int] = {}
+        promoted = 0
+        quarantined = 0
         for item in self.experience_ledger:
+            if item.promotion_status == "approved_long_term_memory":
+                promoted += 1
+            else:
+                quarantined += 1
             for signal in item.signals:
                 signal_counts[signal] = signal_counts.get(signal, 0) + 1
         return {
             "experience_count": len(self.experience_ledger),
+            "promoted_long_term_memory_count": promoted,
+            "quarantined_memory_count": quarantined,
             "recurrent_signals": sorted(signal_counts.items(), key=lambda item: (-item[1], item[0])),
+            "protected_invariants": list(PROTECTED_INVARIANTS),
             "policy_update": "human review required",
             "auto_apply": False,
         }
