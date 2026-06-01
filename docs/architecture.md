@@ -51,3 +51,45 @@ The core design choice is to put safety-critical decisions outside free-form gen
 - no replacement of emergency services
 - human review for high-risk cases
 
+## Academic Architecture View
+
+The research framing names the system **Safety-Bounded LLM Agent with Deterministic Sidecar and Memory Write Gate**. It uses three boundaries:
+
+- **Generation boundary**: the LLM drafts responder-facing language under constraints.
+- **Policy boundary**: risk rules, playbooks, resource checks, and contract checks decide safety behavior.
+- **Memory boundary**: memory can retrieve reviewed experience and propose updates, but it cannot update protected invariants.
+
+```mermaid
+flowchart LR
+    subgraph "Input and Pre-Generation Safety"
+        A["Case Note"] --> B["Input Normalization"]
+        B --> C["Risk Signal Detector"]
+        C --> D["Playbook Matcher"]
+    end
+
+    subgraph "Generation Boundary"
+        D --> E["Gemma / LLM Drafting"]
+    end
+
+    subgraph "Post-Generation Safety"
+        E --> F["Safety Contract Checker"]
+        F --> G["Official Resource Verification"]
+        G --> H["Human Review Trigger"]
+    end
+
+    subgraph "Memory Boundary"
+        M1["Runtime Observation"] --> M2["Quarantine"]
+        M2 --> M3["Human Review"]
+        M3 --> M4["Approved Memory"]
+        M4 --> M5["Memory Retrieval"]
+        M5 -. "advisory context only" .-> E
+        M5 -. "cannot rewrite" .-> P["Protected Safety Invariants"]
+    end
+
+    H --> I["Structured JSON Export"]
+    I --> J["Audit Trace"]
+    J --> K["Responder Handoff"]
+    P -. "enforced by sidecar" .-> F
+```
+
+This design intentionally avoids unrestricted autonomy. The agent can organize a case, retrieve reviewed experience, run an offline verification sandbox, and prepare a handoff, but high-risk policy changes and operational escalation remain human-reviewed.

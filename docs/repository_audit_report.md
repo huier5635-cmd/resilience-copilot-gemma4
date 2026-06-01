@@ -28,17 +28,17 @@ The strongest framing is not a generic disaster-response product. It is:
 
 The core engineering question is how to make LLM-assisted case-note processing more reliable through deterministic constraints, memory gating, tool verification, human review, and auditability.
 
-## 3. Missing Summer-Camp Materials Before This Pass
+## 3. Missing Research-Facing Materials Before This Pass
 
 Before this pass, the project lacked:
 
 - a research-style README
-- a single architecture explanation for teachers and interviewers
+- a single architecture explanation for external reviewers
 - a 30-case benchmark
 - ablation-style evaluation
 - explicit memory pollution discussion
-- interview Q&A
-- summer-camp summary
+- discussion Q&A
+- compact project summary
 - pytest-based tests
 - a clean `src/` package that makes the project look reusable
 
@@ -62,12 +62,20 @@ This pass adds:
 - `tests/test_json_export.py`
 - `tests/test_audit_trace.py`
 - `docs/architecture.md`
+- `docs/research_problem.md`
+- `docs/related_work.md`
+- `docs/threat_model.md`
 - `docs/project_report.md`
 - `docs/memory_eval.md`
 - `docs/interview_qa.md`
-- `docs/summer_camp_summary.md`
+- `docs/project_summary.md`
 - `docs/benchmark_eval_report.md`
+- `docs/academic_evaluation.md`
+- `docs/failure_taxonomy_report.md`
 - `docs/stress_test_report.md`
+- `docs/reproducibility_checklist.md`
+- `docs/paper_outline.md`
+- `docs/references.bib`
 
 ## 5. Clarity / Reproducibility Risks
 
@@ -95,4 +103,3 @@ python scripts\run_eval.py
 python scripts\run_stress_test.py
 python -m pytest tests
 ```
-

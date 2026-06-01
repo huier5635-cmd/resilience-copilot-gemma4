@@ -1,4 +1,4 @@
-"""Export a compact reproducibility summary for applications or interviews."""
+"""Export a compact reproducibility summary for external review."""
 
 from __future__ import annotations
 
@@ -21,11 +21,12 @@ def read_json(path: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, default=ROOT / "outputs" / "evaluation" / "summer_camp_results_summary.json")
+    parser.add_argument("--output", type=Path, default=ROOT / "outputs" / "evaluation" / "review_results_summary.json")
     args = parser.parse_args()
 
     local_validation = read_json(ROOT / "outputs" / "local_validation" / "local_validation_report.json")
     benchmark = read_json(ROOT / "outputs" / "evaluation" / "benchmark_eval.json")
+    academic = read_json(ROOT / "outputs" / "evaluation" / "academic_eval.json")
     stress = read_json(ROOT / "outputs" / "evaluation" / "stress_test_eval.json")
     summary = {
         "project": "Safety-Bounded LLM Agent for High-Risk Decision Support",
@@ -34,6 +35,8 @@ def main() -> None:
         "holdout": local_validation.get("holdout_eval", {}).get("summary"),
         "stress": local_validation.get("stress_eval", {}).get("summary"),
         "benchmark_case_count": benchmark.get("case_count"),
+        "academic_case_count": academic.get("case_count"),
+        "academic_metrics": academic.get("academic_metrics"),
         "benchmark_variants": list(benchmark.get("variants", {}).keys()),
         "stress_report": {"passed": stress.get("passed"), "total": stress.get("total")},
         "data_limitations": "Self-built scenario benchmark; no official training dataset was provided by the hackathon.",

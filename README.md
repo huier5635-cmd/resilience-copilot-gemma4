@@ -9,12 +9,25 @@ Resilience Copilot is a safety-bounded LLM agent prototype for disaster-relief c
 ## Quick Links
 
 - Live demo: https://huier5635-cmd.github.io/resilience-copilot-gemma4/
+- Reusable agent entry: `python -m src.agent --scenario "An older adult uses oxygen and the backup battery is empty during a power outage."`
+- Agent implementation: [src/agent/resilience_agent.py](src/agent/resilience_agent.py)
+- Local demo runner: [scripts/run_demo.py](scripts/run_demo.py)
 - GitHub repository: https://github.com/huier5635-cmd/resilience-copilot-gemma4
 - Kaggle writeup: https://www.kaggle.com/competitions/gemma-4-good-hackathon/writeups/new-writeup-1778665719423
 - Gemma 4 evidence notebook: https://www.kaggle.com/code/zhenhuier/notebook5022dfd167
 - Architecture note: [docs/architecture.md](docs/architecture.md)
+- Research problem: [docs/research_problem.md](docs/research_problem.md)
+- Threat model: [docs/threat_model.md](docs/threat_model.md)
+- Academic evaluation: [docs/academic_evaluation.md](docs/academic_evaluation.md)
 - Project report: [docs/project_report.md](docs/project_report.md)
+- Reproducibility checklist: [docs/reproducibility_checklist.md](docs/reproducibility_checklist.md)
 - Repository audit: [docs/repository_audit_report.md](docs/repository_audit_report.md)
+
+## Start Here
+
+- Want to reuse the safety-bounded agent pattern: run `python -m src.agent --scenario "Older adult uses oxygen and the backup battery is empty during a power outage."`, then open [src/agent/resilience_agent.py](src/agent/resilience_agent.py).
+- Want to run the project locally in under a minute: install `requirements.txt`, then run `python scripts\run_demo.py`.
+- Want the fastest product tour: open the live demo, run a sample case, then inspect Transfer Brief, Audit Trace, and JSON export.
 
 ## Project Background
 
@@ -77,6 +90,12 @@ pip install -r requirements.txt
 python scripts\run_demo.py
 ```
 
+Run the reusable package entry point:
+
+```powershell
+python -m src.agent --scenario "An older adult uses oxygen and the backup battery is empty during a power outage."
+```
+
 Run a specific benchmark case:
 
 ```powershell
@@ -114,13 +133,15 @@ Each case displays:
 
 The hackathon did not provide an official training dataset, so the project uses scenario-based local validation and a self-built safety benchmark. Results should be read as engineering validation, not real-world outcome claims.
 
-Run the original Kaggle local gate:
+Run the local validation wrapper:
 
 ```powershell
 python scripts\run_local_validation.py
 ```
 
-Current locked Kaggle gate:
+It reruns the demo, holdout, and stress suites.
+
+Historical locked Kaggle gate:
 
 | Gate | Result |
 | --- | ---: |
@@ -136,6 +157,14 @@ python scripts\run_eval.py
 ```
 
 Latest self-built benchmark summary: [docs/benchmark_eval_report.md](docs/benchmark_eval_report.md)
+
+Run the academic-style stratified evaluation:
+
+```powershell
+python scripts\run_academic_eval.py
+```
+
+Latest academic evaluation: [docs/academic_evaluation.md](docs/academic_evaluation.md)
 
 Run the stress report:
 
@@ -160,6 +189,8 @@ The benchmark compares:
 - E. LLM + Safety Sidecar + Tool/Resource Verification
 
 Metrics include contract pass rate, unsafe response rate, missing risk signal rate, hallucinated resource rate, human review trigger rate, structured JSON valid rate, and audit trace complete rate.
+
+The academic evaluation additionally reports human-review precision/recall/F1, risk-signal recall, contract completeness, audit completeness, unsafe-claim block rate, stratified metrics by risk and uncertainty type, and a failure taxonomy.
 
 ## Safety Mechanisms
 
@@ -207,3 +238,14 @@ Resilience Copilot is intentionally conservative:
 ## Research Keywords
 
 Trustworthy AI, LLM safety, agent safety, high-risk decision support, human-in-the-loop AI, audit trace, tool calling sandbox, bounded memory, memory pollution, safety contract, disaster informatics, responsible AI.
+
+## Research Materials
+
+- [Research problem](docs/research_problem.md)
+- [Related work](docs/related_work.md)
+- [Threat model](docs/threat_model.md)
+- [Academic evaluation](docs/academic_evaluation.md)
+- [Failure taxonomy](docs/failure_taxonomy_report.md)
+- [Reproducibility checklist](docs/reproducibility_checklist.md)
+- [Manuscript outline](docs/paper_outline.md)
+- [References](docs/references.bib)

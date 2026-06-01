@@ -1,60 +1,123 @@
-# Project Report: Safety-Bounded LLM Agent for High-Risk Decision Support
+# Project Report
 
-## 1. 项目背景
+## 1. Background
 
-灾害救援中的一线信息经常以零散 case note 的形式出现：志愿者可能记录到老人缺氧、胰岛素断供、儿童受冷、道路中断、避难所传言、语言障碍或宠物安置等信息。大模型能够快速生成自然语言，但高风险场景真正需要的是可控、可复核、可审计的辅助系统，而不是一个只会流畅回答的聊天机器人。
+High-risk case-note processing is a difficult setting for LLM systems. Volunteers and coordinators may receive short, incomplete, or uncertain notes about power outages, medical-device dependency, medication continuity, flood access, language barriers, pet shelter constraints, and unverified shelter rumors. A fluent chatbot can make these notes easier to read, but fluency alone is not enough. The system must avoid unsupported claims, separate known facts from unknown facts, trigger human review, and preserve an audit trail.
 
-Resilience Copilot 来源于 Kaggle Gemma 4 Good Hackathon，后续被整理成一个面向可信 AI 和 LLM Agent 安全的工程原型。项目目标是研究如何把风险识别、规则约束、工具沙盒、长期记忆门控、人工复核和审计追踪组合起来，让大模型在复杂任务中更可靠。
+Resilience Copilot frames this as a safety-control problem for LLM agents. The prototype uses language generation for responder-facing phrasing, while deterministic sidecars handle risk detection, playbook constraints, official-resource checks, memory write gating, and structured export.
 
-## 2. 问题定义
+## 2. Problem Definition
 
-输入是一段混乱的灾害救援记录，输出不是直接建议用户“去哪里”或“做什么”，而是一个 responder handoff：包含风险等级、触发信号、匹配 playbook、官方资源核验路径、Transfer Brief、结构化 JSON 和 Audit Trace。
+Input: a messy disaster-relief case note.
 
-项目关注的问题是：在没有真实官方训练集的情况下，如何构建一个可复现的安全约束型 LLM Agent 原型，并用自建 benchmark 检查它是否遵守安全契约。
+Output: a responder handoff that includes risk level, detected signals, playbook references, official-resource checks, human-review reason, Transfer Brief, structured JSON export, and Audit Trace.
 
-## 3. 系统架构
+The goal is not to dispatch emergency resources, diagnose medical conditions, or promise live shelter or transport availability. The goal is to produce a bounded and auditable intermediate packet that a responder can review.
 
-系统主流程为：
+## 3. System Architecture
 
-`User Case Note -> Input Normalization -> Risk Signal Detection -> Playbook Matching -> LLM / Gemma Generation -> Safety Contract Checking -> Official Resource Verification -> Memory Retrieval / Protected Invariants -> Human Review Trigger -> Structured JSON Export -> Audit Trace -> Responder Handoff`
+The system is named **Safety-Bounded LLM Agent with Deterministic Sidecar and Memory Write Gate**.
 
-其中生成前链路负责发现风险并限制模型输出空间；生成后链路负责检查响应结构、阻断不支持的资源声明，并把高风险案例交给人工复核。长期记忆只提供辅助检索和策略建议，不能自动修改高风险规则。
+It separates three boundaries:
 
-## 4. 核心模块
+- **Generation boundary**: the LLM is responsible for natural-language drafting and responder-facing phrasing.
+- **Policy boundary**: deterministic sidecar modules, playbooks, and response contracts determine what claims are allowed.
+- **Memory boundary**: memory can retrieve reviewed experience and suggest patterns, but it cannot modify protected safety invariants.
 
-- Risk Signal Detection：基于确定性规则识别氧气设备、药物连续性、洪水、电力、交通、语言、宠物、谣言和避难所容量等信号。
-- Playbook Matching：把风险信号映射到可审计的安全行动手册。
-- Gemma Generation：在 Kaggle Notebook 中验证 Gemma 4 可用于 responder-facing phrasing；本地评测使用 deterministic fallback 保证可复现。
-- Safety Sidecar：在生成前后执行规则约束和安全契约检查。
-- Tool Calling Sandbox：离线模拟官方资源核验，只允许白名单类别，不允许编造实时容量或交通可用性。
-- Memory Write Gate：把未经人工审核的经验隔离在 quarantine，防止 memory pollution。
+The main flow is:
 
-## 5. 安全机制
+```text
+User Case Note
+-> Input Normalization
+-> Risk Signal Detection
+-> Playbook Matching
+-> LLM / Gemma Generation
+-> Safety Contract Checking
+-> Official Resource Verification
+-> Memory Retrieval / Protected Invariants
+-> Human Review Trigger
+-> Structured JSON Export
+-> Audit Trace
+-> Responder Handoff
+```
 
-系统显式禁止医疗诊断、编造避难所容量、编造交通可用性、保证道路安全、替代 emergency services，以及使用儿童或临时翻译处理敏感细节。高风险或资源不确定的案例必须触发 human review。Audit Trace 会记录风险等级、信号、playbook、官方核验路径、被阻断声明和复核原因。
+## 4. Core Modules
 
-## 6. 实验设计
+- **Risk Signal Detection** detects oxygen or powered-device risk, medication continuity, child cold exposure, heat exposure, flood danger, language access, transport barriers, shelter rumors, and pet shelter needs.
+- **Playbook Matching** maps risk signals to auditable response constraints in `knowledge_base/emergency_playbook.json`.
+- **Gemma Generation Path** records Gemma 4 use in a Kaggle evidence notebook. Local evaluation uses deterministic fallback behavior so the benchmark remains reproducible.
+- **Safety Contract Checking** verifies the fixed response shape, structured JSON, Audit Trace, and unsupported-claim patterns.
+- **Tool/Resource Verification Sandbox** blocks unsupported capacity, transport, road-safety, and clinic-availability claims unless official channels are explicitly required.
+- **Memory Write Gate** quarantines unreviewed runtime observations and allows only reviewed feedback to enter retrievable long-term memory.
 
-由于比赛没有官方训练数据，项目使用两类评测：
+## 5. Safety Mechanisms
 
-1. 原 Kaggle 本地验证：demo、holdout、stress 三组场景。
-2. 自建 30 条 benchmark：覆盖缺氧、胰岛素、儿童受冷、断电、洪水、交通、语言、宠物、谣言、容量未知、医疗风险和官方资源不确定。
+The system explicitly blocks or quarantines:
 
-研究化评测比较五个版本：Base LLM fallback、Risk Signal Detection、Safety Sidecar、Sidecar + Memory、Sidecar + Tool/Resource Verification。指标包括 contract pass rate、unsafe response rate、missing risk signal rate、hallucinated resource rate、human review trigger rate、structured JSON valid rate 和 audit trace complete rate。
+- medical diagnosis or medication instructions
+- invented shelter capacity
+- invented transport availability
+- road-safety guarantees
+- unsupported clinic or pharmacy availability
+- replacement of emergency services
+- unsafe ad hoc interpretation for sensitive details
 
-## 7. 实验结果
+High-risk and verification-sensitive cases trigger human review. Audit Trace records risk level, signals, playbooks, official-resource routes, blocked claims, and review reason.
 
-当前 Kaggle 本地门禁结果为 demo 2/2、holdout 2/2、stress 15/15，`ready_to_submit=true`。新增 benchmark 结果由 `python scripts/run_eval.py` 生成，报告保存在 `docs/benchmark_eval_report.md`。这些结果只能说明系统在自建安全测试集上满足工程约束，不能外推为真实灾害救援效果。
+## 6. Evaluation Design
 
-## 8. 项目亮点
+The project uses self-built scenario evaluation because no official training dataset was provided for this task. The evaluation has three parts:
 
-项目亮点不是模型规模，而是系统边界：用确定性 sidecar 管住 LLM 输出；用 playbook 约束生成；用 tool sandbox 管住资源声明；用 memory write gate 防止经验污染；用 structured JSON 和 Audit Trace 保证可复核；用 benchmark 和 stress suite 保证可重复检查。
+1. Local validation gate for demo, holdout, and stress scenarios.
+2. A 30-case benchmark covering oxygen, insulin, cold exposure, flood, power outage, transport barriers, language access, pet shelter, social-media rumor, unknown capacity, medical continuity, and official-resource uncertainty.
+3. Stratified academic-style evaluation by risk type, uncertainty type, and safety invariant.
 
-## 9. 局限性
+The ablations are:
 
-项目仍是原型系统。自建 benchmark 规模较小，没有专家标注；本地 fallback 不能代表真实 Gemma 在线推理的全部行为；官方资源核验是离线沙盒，没有连接真实应急 API；memory 机制仍需要更严格的 provenance、review workflow 和攻击测试。
+- A. Base LLM fallback
+- B. LLM + Risk Signal Detection
+- C. LLM + Safety Sidecar
+- D. LLM + Safety Sidecar + Memory
+- E. LLM + Safety Sidecar + Tool/Resource Verification
 
-## 10. 未来工作
+Metrics include human-review precision/recall/F1, risk-signal recall, contract completeness, audit completeness, unsafe-claim block rate, structured JSON validity, and hallucinated-resource detection.
 
-后续可以沿三个方向深入：第一，构建专家标注的高风险 case-note benchmark；第二，研究 LLM Agent 的 memory pollution、policy drift 和 protected invariant enforcement；第三，在安全边界内扩展工具调用和多 Agent 协作，使系统能连接官方资源 API，但所有高风险策略升级仍需人工审核。
+## 7. Results
 
+The locked local gate previously passed demo 2/2, holdout 2/2, and stress 15/15 with `ready_to_submit=true`. The benchmark and academic reports can be regenerated with:
+
+```powershell
+python scripts\run_eval.py
+python scripts\run_academic_eval.py
+python scripts\run_stress_test.py
+```
+
+The reported results should be interpreted as evidence that the implemented safety controls behave consistently on a small self-built benchmark. They are not evidence of field readiness or real-world outcome improvement.
+
+## 8. Main Contributions
+
+The project contribution is a compact, reproducible prototype for high-risk LLM-agent safety:
+
+- deterministic safety sidecar around generation
+- explicit response contract and structured export
+- official-resource-first verification logic
+- bounded memory with write gate and protected invariants
+- human-review trigger and Audit Trace
+- benchmark protocol for safety-control regression testing
+
+## 9. Limitations
+
+- The benchmark is small and hand-authored.
+- The local evaluation path uses deterministic fallback behavior rather than live LLM calls.
+- The resource verifier is an offline sandbox, not a live official-resource API.
+- Human-review labels are scenario expectations rather than expert-adjudicated operational labels.
+- Memory retrieval is intentionally conservative and does not perform autonomous policy learning.
+
+## 10. Future Work
+
+Future work can extend the project in four directions:
+
+- build a larger expert-reviewed benchmark for high-risk case-note processing
+- compare multiple LLM backbones under the same deterministic safety contract
+- add provenance-aware memory review workflows and attack tests for memory pollution
+- connect approved official-resource APIs inside the tool sandbox while preserving human review for high-risk cases

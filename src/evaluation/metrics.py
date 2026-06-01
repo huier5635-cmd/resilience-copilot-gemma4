@@ -56,7 +56,7 @@ class BenchmarkEvaluator:
     def evaluate(self, cases: list[dict[str, Any]]) -> dict[str, Any]:
         variants = {name: self.evaluate_variant(name, cases) for name in VARIANTS}
         return {
-            "benchmark_source": "self-built scenario benchmark for summer-camp/research presentation",
+            "benchmark_source": "self-built scenario benchmark for safety engineering evaluation",
             "case_count": len(cases),
             "metrics": [
                 "contract_pass_rate",
@@ -101,6 +101,7 @@ class BenchmarkEvaluator:
         return {
             "case_id": case["case_id"],
             "variant": variant,
+            "expected_human_review": expected_review,
             "expected_risk_signal_count": len(expected_signals),
             "missing_risk_signal_count": len(missing_signals),
             "missing_risk_signals": missing_signals,
